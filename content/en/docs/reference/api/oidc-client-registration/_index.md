@@ -112,8 +112,6 @@ X-Frame-Options: DENY
 X-XSS-Protection: 1; mode=block
 ```
 
-
-
 [oidc-dynclientreg]: https://openid.net/specs/openid-connect-registration-1_0.html
 [jq]: https://stedolan.github.io/jq/
 [httpie]: https://httpie.org/
