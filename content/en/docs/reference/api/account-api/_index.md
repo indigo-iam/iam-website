@@ -8,7 +8,7 @@ IAM implements the following endpoints:
 * ```/iam/account/{id}/attributes```, providing access to user attributes
 * ```/iam/account/{id}/authorities```, providing access to user authorities/roles
 * ```/iam/account/me/clients```, providing access to clients owned by the user
-* ```/iam/account/find/{options}```, searching users by username/label/email/group/certificate subject
+* ```/iam/account/find/{option}```, searching users by username/label/email/group/certificate subject
 * ```/iam/account/{id}/groups/{groupUuid}```, providing access to user groups
 * ```/iam/account/{id}/managed-groups```, providing access to groups to which a user is manager
 * ```/iam/group/{groupUuid}/group-managers```, listing managers of a certain group
@@ -134,100 +134,124 @@ Retrieves information about clients owned by the currently authenticated user.
 }
 ```
 
-## GET `/iam/account/find/{options}`
+## GET `/iam/account/find/{option}`
 
-Filters user information by label, email, username, certificate subject or group. 
+Filters user information by label, email, username, certificate subject or group/notingroup.
 
 Requires `ROLE_ADMIN`.
 
-For example, search by username:
+| Option | Attribute | Value |
+| -------- | -------- | -------- |
+|   byusername   |   username   | string     |
+|   bylabel   |   name   | string     |
+|   byemail   |   email   | string     |
+|   bycertsubject   |   certificateSubject   | URL-encoded     |
 
-    GET http://localhost:8080/iam/account/find/byusername?username=test
 
-```json
-{
-  "totalResults": 1,
-  "itemsPerPage": 10,
-  "startIndex": 1,
-  "schemas": [
-    "urn:ietf:params:scim:api:messages:2.0:ListResponse"
-  ],
-  "Resources": [
+Examples of the available options:
+* byusername
+    ```json
+    $ curl -s -H "Authorization: Bearer ${AT}" http://localhost:8080/iam/account/find/byusername?username=test | jq
     {
-      "id": "80e5fb8d-b7c8-451a-89ba-346ae278a66f",
-      "meta": {
-        "created": "2022-07-26T13:48:35.442+02:00",
-        "lastModified": "2022-07-26T13:48:35.442+02:00",
-        "location": "http://localhost:8080/scim/Users/80e5fb8d-b7c8-451a-89ba-346ae278a66f",
-        "resourceType": "User"
-      },
+      "totalResults": 1,
+      "itemsPerPage": 10,
+      "startIndex": 1,
       "schemas": [
-        "urn:ietf:params:scim:schemas:core:2.0:User",
-        "urn:indigo-dc:scim:schemas:IndigoUser"
+        "urn:ietf:params:scim:api:messages:2.0:ListResponse"
       ],
-      "userName": "test",
-      "name": {
-        "familyName": "User",
-        "formatted": "Test User",
-        "givenName": "Test"
-      },
-      "displayName": "test",
-      "active": true,
-      "emails": [
+      "Resources": [
         {
-          "type": "work",
-          "value": "test@iam.test",
-          "primary": true
-        }
-      ],
-      "groups": [
-        {
-          "display": "Production",
-          "value": "c617d586-54e6-411d-8e38-64967798fa8a",
-          "$ref": "http://localhost:8080/scim/Groups/c617d586-54e6-411d-8e38-64967798fa8a"
-        },
-        {
-          "display": "Analysis",
-          "value": "6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1",
-          "$ref": "http://localhost:8080/scim/Groups/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1"
-        }
-      ],
-      "urn:indigo-dc:scim:schemas:IndigoUser": {
-        "oidcIds": [
-          {
-            "issuer": "https://accounts.google.com",
-            "subject": "105440632287425289613"
+          "id": "80e5fb8d-b7c8-451a-89ba-346ae278a66f",
+          "meta": {
+            "created": "2022-07-26T13:48:35.442+02:00",
+            "lastModified": "2022-07-26T13:48:35.442+02:00",
+            "location": "http://localhost:8080/scim/Users/80e5fb8d-b7c8-451a-89ba-346ae278a66f",
+            "resourceType": "User"
           },
-          {
-            "issuer": "urn:test-oidc-issuer",
-            "subject": "test-user"
-          }
-        ],
-        "samlIds": [
-          {
-            "idpId": "https://idptestbed/idp/shibboleth",
-            "userId": "andrea.ceccanti@example.org",
-            "attributeId": "urn:oid:0.9.2342.19200300.100.1.3"
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:User",
+            "urn:indigo-dc:scim:schemas:IndigoUser"
+          ],
+          "userName": "test",
+          "name": {
+            "familyName": "User",
+            "formatted": "Test User",
+            "givenName": "Test"
           },
-          {
-            "idpId": "https://idptestbed/idp/shibboleth",
-            "userId": "78901@idptestbed",
-            "attributeId": "urn:oid:1.3.6.1.4.1.5923.1.1.1.13"
+          "displayName": "test",
+          "active": true,
+          "emails": [
+            {
+              "type": "work",
+              "value": "test@iam.test",
+              "primary": true
+            }
+          ],
+          "groups": [
+            {
+              "display": "Production",
+              "value": "c617d586-54e6-411d-8e38-64967798fa8a",
+              "$ref": "http://localhost:8080/scim/Groups/c617d586-54e6-411d-8e38-64967798fa8a"
+            },
+            {
+              "display": "Analysis",
+              "value": "6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1",
+              "$ref": "http://localhost:8080/scim/Groups/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1"
+            }
+          ],
+          "urn:indigo-dc:scim:schemas:IndigoUser": {
+            "oidcIds": [
+              {
+                "issuer": "https://accounts.google.com",
+                "subject": "105440632287425289613"
+              },
+              {
+                "issuer": "urn:test-oidc-issuer",
+                "subject": "test-user"
+              }
+            ],
+            "samlIds": [
+              {
+                "idpId": "https://idptestbed/idp/shibboleth",
+                "userId": "andrea.ceccanti@example.org",
+                "attributeId": "urn:oid:0.9.2342.19200300.100.1.3"
+              },
+              {
+                "idpId": "https://idptestbed/idp/shibboleth",
+                "userId": "78901@idptestbed",
+                "attributeId": "urn:oid:1.3.6.1.4.1.5923.1.1.1.13"
+              }
+            ]
           }
-        ]
-      }
+        }
+      ]
     }
-  ]
-}
-```
-The following request shows all the information of the users belonging to the group with {groupUuid} id:
+    ```
 
-    GET http://localhost:8080/iam/account/find/bygroup/{groupUuid}
+* bylabel
+    ```
+    $ curl -s -H "Authorization: Bearer ${AT}" http://localhost:8080/iam/account/find/bylabel?name=test
+    ```
 
-List all users that do not belong to a specific group:
+* byemail
+    ```
+    $ curl -s -H "Authorization: Bearer ${AT}" http://localhost:8080/iam/account/find/byemail?email=test.user@gmail.com
+    ```
 
-    GET http://localhost:8080/iam/account/find/notingroup/{groupUuid}
+* bycertsubject
+    ```
+    $ curl -H "Authorization: Bearer $AT" http://localhost:8080/iam/account/find/bycertsubject?certificateSubject=CN%3dTest%20User%20test%40infn.it%2cO%3dIstituto%20Nazionale%20di%20Fisica%20Nucleare%2cC%3dIT%2cDC%3dtcs%2cDC%3dterena%2cDC=org
+    ```
 
+* bygroup/{groupUuid}
+    ```
+    $ curl -H "Authorization: Bearer ${AT}" http://localhost:8080/iam/account/find/bygroup/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1
+    ```
+
+* notingroup/{groupUuid}
+    ```
+    $ curl -H "Authorization: Bearer ${AT}" http://localhost:8080/iam/account/find/notingroup/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1
+    ```
 
 ## POST `/iam/account/{id}/groups/{groupUuid}`
 
