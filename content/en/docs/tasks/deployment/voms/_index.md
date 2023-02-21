@@ -134,7 +134,7 @@ For an example configuration, see the [VOMS AA docker compose
 file][voms-aa-compose].
 
 [openresty-voms]: https://github.com/indigo-iam/openresty-voms
-[voms-aa]: https://github.com/indigo-iam/iam/tree/develop/iam-voms-aa
+[voms-aa]: https://github.com/indigo-iam/iam/tree/master/iam-voms-aa
 [voms-aa-compose-openresty]: https://github.com/indigo-iam/voms-aa/blob/master/compose/assets/openresty-voms/conf.d/voms.local.io.conf
 [voms-aa-compose]:
 https://github.com/indigo-iam/voms-aa/blob/master/compose/docker-compose.yml
