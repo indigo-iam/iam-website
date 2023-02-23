@@ -8,22 +8,29 @@ IAM implements the following endpoints:
 * ```/iam/account/{id}/attributes```, providing access to user attributes
 * ```/iam/account/{id}/authorities```, providing access to user authorities/roles
 * ```/iam/account/me/clients```, providing access to clients owned by the user
-* ```/iam/account/find/{option}```, searching users by username/label/email/group/certificate subject
-* ```/iam/account/{id}/groups/{groupUuid}```, providing access to user groups
+* ```/iam/account/find/{option}```, searching users by username/label/e-mail/group/certificate subject
+* ```/iam/account/{id}/groups/{groupId}```, providing access to user groups
 * ```/iam/account/{id}/managed-groups```, providing access to groups to which a user is manager
-* ```/iam/group/{groupUuid}/group-managers```, listing managers of a certain group
+* ```/iam/group/{groupId}/group-managers```, listing managers of a certain group
 * ```/iam/account/{id}/labels```, providing access to user account labels
 * ```/iam/account/{id}/endTime```, managing user membership end time
 * ```/iam/account/me/proxycert```, managing user proxy certificate
-* ```/iam/account/search```, listing user accounts
+* ```/iam/account/search```, listing user accounts.
 
-## GET `/iam/account/{id}/attributes`
+Authentication is required in all the endpoints and the access is based on IAM roles.
+Remember that there are three roles in Indigo IAM: Amdin, User, Group Manager.
+
+## User attributes
+
+### GET `/iam/account/{id}/attributes`
 
 Retrieves user attributes. The {id} refers to the account identifier.
 
-    GET http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/attributes
+Requires that the user has `ROLE_ADMIN`, `ROLE_GM`, or is the one represented by the {id}.
 
-```json
+```bash
+$ curl -s -H "Authorization: Bearer ${AT}" \
+  http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/attributes | jq
 [
   {
     "name": "Nickname",
@@ -32,7 +39,7 @@ Retrieves user attributes. The {id} refers to the account identifier.
 ]
 ```
 
-## PUT `/iam/account/{id}/attributes`
+### PUT `/iam/account/{id}/attributes`
 
 Adds attributes to the user account. It can be done directly through the IAM dashboard by clicking on "Set attribute" button in *Attributes* section of the user homepage.
 
@@ -54,7 +61,7 @@ where ```attribute.json``` is:
 }
 ```
 
-## DELETE `/iam/account/{id}/attributes`
+### DELETE `/iam/account/{id}/attributes`
 
 Deletes user attribute by adding the query parameter at the end of the endpoint.
 
@@ -65,15 +72,17 @@ $ curl -X DELETE -H "Authorization: Bearer ${AT}" \
   http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/attributes?name=Nickname
 ```
 
-## GET `/iam/account/{id}/authorities`
+## User roles
+
+### GET `/iam/account/{id}/authorities`
 
 Retrieves user roles.
 
-Requires `ROLE_ADMIN`.
+Requires `ROLE_ADMIN` or `ROLE_GM`.
 
-    GET http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/authorities
-
-```json
+```bash
+$ curl -s -H "Authorization: Bearer ${AT}" \
+  http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/authorities | jq
 {
   "authorities": [
     "ROLE_GM:c617d586-54e6-411d-8e38-649677980001",
@@ -82,12 +91,11 @@ Requires `ROLE_ADMIN`.
 }
 ```
 
-The above example shows that the Test User is also a group manager (of group with ```c617d586-54e6-411d-8e38-649677980001``` id). 
-Remember that there are three roles in Indigo IAM: Amdin, User, Group Manager.
+The above example shows that the Test User is also a group manager (of group with ```c617d586-54e6-411d-8e38-649677980001``` id).
 
-## POST `/iam/account/{id}/authorities`
+### POST `/iam/account/{id}/authorities`
 
-Assignes an authority to the user.
+Adds an authority to the user.
 
 Requires `ROLE_ADMIN`.
 
@@ -97,7 +105,7 @@ $ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
   http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/authorities
 ```
 
-## DELETE `/iam/account/{id}/authorities`
+### DELETE `/iam/account/{id}/authorities`
 
 Revokes user authority by specifying the query parameter.
 
@@ -108,13 +116,15 @@ $ curl -X DELETE -H "Authorization: Bearer ${AT}" \
   http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/authorities?authority=ROLE_ADMIN
 ```
 
-## GET `/iam/account/me/clients`
+## Managed clients
+
+### GET `/iam/account/me/clients`
 
 Retrieves information about clients owned by the currently authenticated user.
 
-    GET http://localhost:8080/iam/account/me/clients
-
-```json
+```bash
+$ curl -s -H "Authorization: Bearer ${AT}" \
+  http://localhost:8080/iam/account/me/clients | jq
 {
   "totalResults": 1,
   "itemsPerPage": 1,
@@ -134,9 +144,11 @@ Retrieves information about clients owned by the currently authenticated user.
 }
 ```
 
-## GET `/iam/account/find/{option}`
+## Account filtering
 
-Filters user information by label, email, username, certificate subject or group/notingroup.
+### GET `/iam/account/find/{option}`
+
+Filters user information by label, e-mail, username, certificate subject or group/notingroup.
 
 Requires `ROLE_ADMIN`.
 
@@ -147,11 +159,11 @@ Requires `ROLE_ADMIN`.
 |   byemail   |   email   | string     |
 |   bycertsubject   |   certificateSubject   | URL-encoded     |
 
-
 Examples of the available options:
 * byusername
-    ```json
-    $ curl -s -H "Authorization: Bearer ${AT}" http://localhost:8080/iam/account/find/byusername?username=test | jq
+    ```bash
+    $ curl -s -H "Authorization: Bearer ${AT}" \
+      http://localhost:8080/iam/account/find/byusername?username=test | jq
     {
       "totalResults": 1,
       "itemsPerPage": 10,
@@ -167,117 +179,78 @@ Examples of the available options:
             "lastModified": "2022-07-26T13:48:35.442+02:00",
             "location": "http://localhost:8080/scim/Users/80e5fb8d-b7c8-451a-89ba-346ae278a66f",
             "resourceType": "User"
-          },
-          "schemas": [
-            "urn:ietf:params:scim:schemas:core:2.0:User",
-            "urn:indigo-dc:scim:schemas:IndigoUser"
-          ],
-          "userName": "test",
-          "name": {
-            "familyName": "User",
-            "formatted": "Test User",
-            "givenName": "Test"
-          },
-          "displayName": "test",
-          "active": true,
-          "emails": [
-            {
-              "type": "work",
-              "value": "test@iam.test",
-              "primary": true
-            }
-          ],
-          "groups": [
-            {
-              "display": "Production",
-              "value": "c617d586-54e6-411d-8e38-64967798fa8a",
-              "$ref": "http://localhost:8080/scim/Groups/c617d586-54e6-411d-8e38-64967798fa8a"
-            },
-            {
-              "display": "Analysis",
-              "value": "6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1",
-              "$ref": "http://localhost:8080/scim/Groups/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1"
-            }
-          ],
-          "urn:indigo-dc:scim:schemas:IndigoUser": {
-            "oidcIds": [
-              {
-                "issuer": "https://accounts.google.com",
-                "subject": "105440632287425289613"
-              },
-              {
-                "issuer": "urn:test-oidc-issuer",
-                "subject": "test-user"
-              }
-            ],
-            "samlIds": [
-              {
-                "idpId": "https://idptestbed/idp/shibboleth",
-                "userId": "andrea.ceccanti@example.org",
-                "attributeId": "urn:oid:0.9.2342.19200300.100.1.3"
-              },
-              {
-                "idpId": "https://idptestbed/idp/shibboleth",
-                "userId": "78901@idptestbed",
-                "attributeId": "urn:oid:1.3.6.1.4.1.5923.1.1.1.13"
-              }
-            ]
-          }
-        }
+          ...
       ]
     }
     ```
 
 * bylabel
-    ```
-    $ curl -s -H "Authorization: Bearer ${AT}" http://localhost:8080/iam/account/find/bylabel?name=test
+    ```bash
+    $ curl -s -H "Authorization: Bearer ${AT}" \
+      http://localhost:8080/iam/account/find/bylabel?name=test
     ```
 
 * byemail
-    ```
-    $ curl -s -H "Authorization: Bearer ${AT}" http://localhost:8080/iam/account/find/byemail?email=test.user@gmail.com
+    ```bash
+    $ curl -s -H "Authorization: Bearer ${AT}" \
+      http://localhost:8080/iam/account/find/byemail?email=test.user@gmail.com
     ```
 
 * bycertsubject
-    ```
-    $ curl -H "Authorization: Bearer $AT" http://localhost:8080/iam/account/find/bycertsubject?certificateSubject=CN%3dTest%20User%20test%40infn.it%2cO%3dIstituto%20Nazionale%20di%20Fisica%20Nucleare%2cC%3dIT%2cDC%3dtcs%2cDC%3dterena%2cDC=org
-    ```
-
-* bygroup/{groupUuid}
-    ```
-    $ curl -H "Authorization: Bearer ${AT}" http://localhost:8080/iam/account/find/bygroup/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1
+    ```bash
+    $ curl -s -H "Authorization: Bearer $AT" \
+      http://localhost:8080/iam/account/find/bycertsubject?certificateSubject=CN%3dTest%20User%20test%40infn.it%2cO%3dIstituto%20Nazionale%20di%20Fisica%20Nucleare%2cC%3dIT%2cDC%3dtcs%2cDC%3dterena%2cDC=org
     ```
 
-* notingroup/{groupUuid}
-    ```
-    $ curl -H "Authorization: Bearer ${AT}" http://localhost:8080/iam/account/find/notingroup/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1
+* bygroup/{groupId}
+    ```bash
+    $ curl -s -H "Authorization: Bearer ${AT}" \
+      http://localhost:8080/iam/account/find/bygroup/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1
     ```
 
-## POST `/iam/account/{id}/groups/{groupUuid}`
+* notingroup/{groupId}
+    ```bash
+    $ curl -H "Authorization: Bearer ${AT}" \
+      http://localhost:8080/iam/account/find/notingroup/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1
+    ```
+
+## Group members
+
+### POST `/iam/account/{id}/groups/{groupId}`
 
 Adds user to a group. It can be done directly through the IAM dashboard as explained [here][group membership section].
 
 Requires `ROLE_ADMIN` or `ROLE_GM`.
 
-    POST http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/groups/c617d586-54e6-411d-8e38-649677980004
+```bash
+$ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
+  -H "Authorization: Bearer ${AT}" \
+  http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/groups/c617d586-54e6-411d-8e38-649677980004
+```
 
 
-## DELETE `/iam/account/{id}/groups/{groupUuid}`
+### DELETE `/iam/account/{id}/groups/{groupId}`
 
 Removes user from a specific group.
 
 Requires `ROLE_ADMIN` or `ROLE_GM`.
 
-    DELETE http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/groups/c617d586-54e6-411d-8e38-649677980004
+```bash
+$ curl -X DELETE -H "Authorization: Bearer ${AT}" \
+  http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/groups/c617d586-54e6-411d-8e38-649677980004
+```
 
+## Group managers
 
-## GET `/iam/account/{id}/managed-groups`
+### GET `/iam/account/{id}/managed-groups`
 
-Lists the user's managed and unmanaged groups.
+Lists the user's managed and not managed groups.
 
-    GET http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/managed-groups
+Requires that the user has `ROLE_ADMIN` or is the one represented by the {id}.
 
-```json
+```bash
+$ curl -s -H "Authorization: Bearer ${AT}" \
+  http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/managed-groups | jq
 {
   "id": "80e5fb8d-b7c8-451a-89ba-346ae278a66f",
   "username": "test",
@@ -295,28 +268,39 @@ Lists the user's managed and unmanaged groups.
 }
 ```
 
-## POST `/iam/account/{id}/managed-groups`
+### POST `/iam/account/{id}/managed-groups/{groupId}`
 
-Adds group managers to a specific group.
+Gives a user represented by {id} `ROLE_GM` privileges of the group identified by {groupId}.
 
-    POST http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/managed-groups/c617d586-54e6-411d-8e38-649677980004
+Requires `ROLE_ADMIN`.
+
+```bash
+$ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
+  -H "Authorization: Bearer ${AT}" \
+  http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/managed-groups/c617d586-54e6-411d-8e38-649677980004
+```
 
 
-## DELETE `/iam/account/{id}/managed-groups`
+### DELETE `/iam/account/{id}/managed-groups/{groupId}`
 
 Removes a group manager from a certain group.
 
-    DELETE http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/managed-groups/c617d586-54e6-411d-8e38-649677980004
+Requires `ROLE_ADMIN`.
 
-## GET `/iam/group/{groupUuid}/group-managers`
+```bash
+$ curl -X DELETE -H "Authorization: Bearer ${AT}" \
+  http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/managed-groups/c617d586-54e6-411d-8e38-649677980004
+```
+
+### GET `/iam/group/{groupId}/group-managers`
 
 Shows the information of managers in a certain group.
 
-Requires `ROLE_ADMIN` or `ROLE_GM`.
+Requires `ROLE_ADMIN` or `ROLE_GM` privileges of the group identified by {groupId}.
 
-    GET http://localhost:8080/iam/group/c617d586-54e6-411d-8e38-649677980004/group-managers
-
-```json
+```bash
+$ curl -s -H "Authorization: Bearer ${AT}" \
+  http://localhost:8080/iam/group/c617d586-54e6-411d-8e38-649677980004/group-managers
 [
   {
     "id": "80e5fb8d-b7c8-451a-89ba-346ae278a66f",
@@ -336,62 +320,22 @@ Requires `ROLE_ADMIN` or `ROLE_GM`.
       "formatted": "Test User",
       "givenName": "Test"
     },
-    "displayName": "test",
-    "active": true,
-    "emails": [
-      {
-        "type": "work",
-        "value": "test@iam.test",
-        "primary": true
-      }
-    ],
-    "groups": [
-      {
-        "display": "Production",
-        "value": "c617d586-54e6-411d-8e38-64967798fa8a",
-        "$ref": "http://localhost:8080/scim/Groups/c617d586-54e6-411d-8e38-64967798fa8a"
-      },
-      {
-        "display": "Analysis",
-        "value": "6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1",
-        "$ref": "http://localhost:8080/scim/Groups/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1"
-      }
-    ],
-    "urn:indigo-dc:scim:schemas:IndigoUser": {
-      "oidcIds": [
-        {
-          "issuer": "https://accounts.google.com",
-          "subject": "105440632287425289613"
-        },
-        {
-          "issuer": "urn:test-oidc-issuer",
-          "subject": "test-user"
-        }
-      ],
-      "samlIds": [
-        {
-          "idpId": "https://idptestbed/idp/shibboleth",
-          "userId": "andrea.ceccanti@example.org",
-          "attributeId": "urn:oid:0.9.2342.19200300.100.1.3"
-        },
-        {
-          "idpId": "https://idptestbed/idp/shibboleth",
-          "userId": "78901@idptestbed",
-          "attributeId": "urn:oid:1.3.6.1.4.1.5923.1.1.1.13"
-        }
-      ]
-    }
+    ...
   }
 ]
 ```
 
-## GET `/iam/account/{id}/labels`
+## Account labels
+
+### GET `/iam/account/{id}/labels`
 
 Shows the user account labels.
 
-    GET http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/labels
+Requires that the user has `ROLE_ADMIN`, `ROLE_GM`, or is the one represented by the {id}.
 
-```json
+```bash
+$ curl -s -H "Authorization: Bearer ${AT}" \
+  http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/labels
 [
   {
     "prefix": "hr.cern",
@@ -400,7 +344,7 @@ Shows the user account labels.
 ]
 ```
 
-## PUT `/iam/account/{id}/labels`
+### PUT `/iam/account/{id}/labels`
 
 Adds labels to user account.
 
@@ -412,19 +356,32 @@ $ curl -X PUT -H "Content-Type: application/json" \
   http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/labels
 ```
 
-## DELETE `/iam/account/{id}/labels`
+where `labels.json` is:
+
+```json
+{
+  "prefix": "hr.cern",
+  "name": "ignore"
+}
+```
+
+### DELETE `/iam/account/{id}/labels`
 
 Deletes an account label by adding the query parameter.
 
 Requires `ROLE_ADMIN`.
 
-    DELETE http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/labels?name=ignore
+```bash
+$ curl -X DELETE -H "Authorization: Bearer ${AT}" \
+  http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/labels?name=ignore
+```
 
+## User account expiration time
 
-## PUT `/iam/account/{id}/endTime`
+### PUT `/iam/account/{id}/endTime`
 
 Adds/changes the membership end time of the user. It can be done directly through the IAM dashboard 
-by clicking on "Change membership end time" button in user homepage.
+by clicking on "Change membership end time" button in the user homepage.
 
 Requires `ROLE_ADMIN`.
 
@@ -443,7 +400,9 @@ where ```endTime.json``` is:
 }
 ```
 
-## PUT `/iam/account/me/proxycert`
+## Proxy certificate
+
+### PUT `/iam/account/me/proxycert`
 
 Adds user proxy certificate. It can be done directly through the IAM dashboard 
 by clicking on "Add managed proxy certificate" button 
@@ -456,19 +415,23 @@ $ curl -i -X PUT -d @proxy.json \
   http://localhost:8080/iam/account/me/proxycert
 ```
 
-where `proxy.json` includes only the *certificate_chain* claim:
+where `proxy.json` includes only the *certificate_chain* key:
 
 ```json
 {"certificate_chain":"-----BEGIN CERTIFICATE-----\nMIIFGT...FlCU=\n-----END CERTIFICATE-----"}
 ```
 
-## GET `/iam/account/search`
+## List accounts and groups
+
+### GET `/iam/account/search`
 
 Shows the list of IAM accounts.
 
-Requires `ROLE_ADMIN` or `ROLE_GM` or `scim:read` scope.
+Requires `ROLE_ADMIN`, `ROLE_GM` or `scim:read` scope.
 
-```json
+```bash
+$ curl -s -H "Authorization: Bearer ${AT}" \
+  http://localhost:8080/iam/account/search
 {
   "totalResults": 254,
   "itemsPerPage": 10,
@@ -501,11 +464,15 @@ Requires `ROLE_ADMIN` or `ROLE_GM` or `scim:read` scope.
     ...
 ```
 
-## GET `/iam/group/search`
+### GET `/iam/group/search`
 
 Shows the list of IAM groups.
 
-```json
+Access granted to all IAM users or `scim:read` scope.
+
+```bash
+$ curl -s -H "Authorization: Bearer ${AT}" \
+  http://localhost:8080/iam/group/search
 {
   "totalResults": 22,
   "itemsPerPage": 10,
