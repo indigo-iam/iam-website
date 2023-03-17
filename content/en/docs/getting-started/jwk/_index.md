@@ -54,4 +54,8 @@ Full key:
 Save the output of the above command (minus the `Full key:` initial text) in a
 file, e.g. `keystore.jwks`.
 
+See [JSON Web Keys (JWK)][jwk] reference page for more details about configuration of JSON web keys.
+
+
+[jwk]: {{< ref "/docs/reference/configuration/jwk" >}}
 [jwk-generator]: https://github.com/mitreid-connect/json-web-key-generator
