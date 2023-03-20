@@ -367,13 +367,14 @@ where `labels.json` is:
 
 ### DELETE `/iam/account/{id}/labels`
 
-Deletes an account label by adding the query parameter.
+Deletes an account label by specifying the label name and the label prefix (if present).
 
 Requires `ROLE_ADMIN`.
 
 ```bash
 $ curl -X DELETE -H "Authorization: Bearer ${AT}" \
-  http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/labels?name=ignore
+  http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/labels \
+  -d name=ignore -d prefix="hr.cern"
 ```
 
 ## User account expiration time
