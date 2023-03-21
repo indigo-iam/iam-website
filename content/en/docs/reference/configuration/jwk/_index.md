@@ -155,6 +155,6 @@ update or because of a security instance, etc.). For example:
   }
   ```
 
-So with this update method, service wasn't interrupted for any user. And the key has been changed to the new key.
+With this update method, the service is not interrupted for any user and the key is replaced with a new one.
 
 [jwk-generator]: {{< ref "/docs/getting-started/jwk" >}}
