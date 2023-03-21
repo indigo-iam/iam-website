@@ -3,27 +3,25 @@ title: "JSON Web Keys (JWK)"
 linkTitle: "JSON Web Keys (JWK)"
 weight: 7
 ---
-  
-  
+
 JSON Web Key (JWK) is a JSON data structure that represents a single public key or a set of
 public keys. IAM uses private JWKs to sign tokens, and IAM clients use public JWKs to validate the tokens.
 A [JWK Generator][jwk-generator] can be used to generate new keys.
 
 ### Keystore Location
 
-JWKs are stored in a file that is called keystore. All the keys in this file will be 
-used for validating the tokens. Keystore location is set using the `IAM_KEY_STORE_LOCATION` 
+JWKs are stored in a file that is called keystore. All the keys in this file will be
+used for validating the tokens. Keystore location is set using the `IAM_KEY_STORE_LOCATION`
 environment variable, e.g.:
 
 ```env
 IAM_KEY_STORE_LOCATION=file:///secrets/jwk/keystore.jwks
 ```
 
-
 ### Default Key ID (kid)
 
 If there are multiple JWKs in the keystore, `IAM_JWK_DEFAULT_KEY` environment variable
-can be set to choose the the key that signs the tokens, e.g.:
+can be set to choose the key that signs the tokens, e.g.:
 
 ```env
 IAM_JWK_DEFAULT_KEY=rsa2
@@ -31,27 +29,27 @@ IAM_JWK_DEFAULT_KEY=rsa2
 
 If this variable is not set it will use the default value `rsa1`.
 
-
 ### Default JWE Keys
 
 JSON Web Encryption (JWE) represents encrypted content using JSON-based data structures.
-JWE allows to encrypt the the JWT tokens so that only the intended receipient can decrypt
-and see the content.  
+JWE allows to encrypt the JWT tokens so that only the intended recipient can decrypt
+and see the content.
 
 Default JWE decrypt key and encrypt key id can be set using the
- `IAM_JWK_DEFAULT_JWE_DECRYPT_KEY_ID` and `IAM_JWK_DEFAULT_JWE_ENCRYPT_KEY_ID` 
- environment variables respectively, e.g.:
+`IAM_JWK_DEFAULT_JWE_DECRYPT_KEY_ID` and `IAM_JWK_DEFAULT_JWE_ENCRYPT_KEY_ID`
+environment variables respectively, e.g.:
 
- ```env
+```env
 IAM_JWK_DEFAULT_JWE_DECRYPT_KEY_ID=jwe-decrypt
 IAM_JWK_DEFAULT_JWE_ENCRYPT_KEY_ID=jwe-encrypt
 ```
 
 ### Default Algorithms
 
-Default alorithms used for signing and encrypting the key can be set using 
+Default alorithms used for signing and encrypting the key can be set using
 `IAM_JWK_DEFAULT_JWS_ALGORITHM` and `IAM_JWT_DEFAULT_JWE_ALGORITHM` environment variables
 respectively, default algorithms are like following:
+
 ```env
 IAM_JWK_DEFAULT_JWS_ALGORITHM=RS256
 IAM_JWT_DEFAULT_JWE_ALGORITHM=RSA_OAEP_256
@@ -59,11 +57,12 @@ IAM_JWT_DEFAULT_JWE_ALGORITHM=RSA_OAEP_256
 
 ## Rotating Keys
 
-To change the JWKs without any interruption on the service, a rolling update can be done 
-using these configurations. An example of a rolling update can be like this:  
+To change the JWKs without any interruption on the service, a rolling update can be done
+using these configurations. Below is an example of a rolling update.
 
 At the beginning there is one JWK in the keystore but it needs to be changed (e.g. regular
 update or because of a security instance, etc.). For example:
+
 ```json
 {
   "keys": [
@@ -84,12 +83,13 @@ update or because of a security instance, etc.). For example:
 ```
 
 - Firstly, new JWK should be added to the keystore using the file in the `IAM_KEY_STORE_LOCATION`.
-  But the `IAM_JWK_DEFAULT_KEY` should still be left as the key id of the old key. This way all the
-  clients can cache the new public key. Before the next step, waiting as long as the agreed policy for 
+  The `IAM_JWK_DEFAULT_KEY` should still be left as the key id of the old key. This way all the
+  clients can cache the new public key. Before the next step, waiting as long as the agreed policy for
   key caching for the infrastructure would be enough to make sure every client cached the new
-  key.  
+  key.
 
   So new keystore in the example would be:
+
   ```json
   {
     "keys": [
@@ -120,18 +120,19 @@ update or because of a security instance, etc.). For example:
     ]
   }
   ```
-  In this example `IAM_JWK_DEFAULT_KEY=rsa1` is kept the unchanged.
 
-- Secondly, after the new key is cached by all of the clients, the signing key should be changed as the 
-  new key. This can be done with `IAM_JWK_DEFAULT_KEY` variable. But the old key should still be kept in 
-  the keystore, otherwise all the current tokens would stop working. Before removing the old key from the 
-  key store, waiting as long the longest allowed token lifetime would be enough for the old tokens to expire 
+  In this example `IAM_JWK_DEFAULT_KEY=rsa1` is kept unchanged.
+
+- Secondly, after the new key is cached by all of the clients, the signing key should be changed as the
+  new key via the `IAM_JWK_DEFAULT_KEY` variable. The old key should still be kept in
+  the keystore, otherwise all the current tokens would stop working. Before removing it from the
+  key store, waiting as long the longest allowed token lifetime would be enough for the old tokens to expire
   and the clients will be left with only tokens that are signed with new key.
 
   So in the example default key should be set as `IAM_JWK_DEFAULT_KEY=rsa2`.
 
 - As the last step, old key can be removed from the keystore. So only the tokens that were signed with the new
-  key will be valid after this.  
+  key will be valid after this.
 
   So the keystore would be like following:
 
@@ -153,9 +154,7 @@ update or because of a security instance, etc.). For example:
     ]
   }
   ```
-  In this example `IAM_JWK_DEFAULT_KEY=rsa2` is kept the unchanged.
 
 So with this update method, service wasn't interrupted for any user. And the key has been changed to the new key.
-
 
 [jwk-generator]: {{< ref "/docs/getting-started/jwk" >}}
