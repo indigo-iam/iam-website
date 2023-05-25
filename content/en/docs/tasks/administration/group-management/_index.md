@@ -53,10 +53,10 @@ Choose one or more groups and confirm the operation:
 
 Starting with version 1.7.0, when a user is added as member of the children group `A/B`, IAM
 takes care of adding them also to the parent group `A` that
-they is not already a member of.  In previous versions this had to be done
+they are not already a members of.  In previous versions this had to be done
 manually by the IAM administrator. Following the same rationale, when a user is
 removed from the parent group `A`, it is also automatically removed from any children groups
-(e.g. `A/B`) it is a member of.
+(e.g. `A/B`) they are members of.
 
 To remove a user from a group, click the _Remove_ button.
 
@@ -72,18 +72,18 @@ Group Managers are IAM users with privileges that allow to manage groups.
 In order to assign Group Manager privileges to a user, you can select the group,
 click on the _Managers_ tab and then on _Assign group manager_.
 A popup window will appear to search for IAM users: after selecting the
-corresponding user that want to became Group Manager, click on _Add group manager_.
+corresponding user that wants to became Group Manager, click on _Add group manager_.
 
 ![INDIGO IAM Members list](../images/IAM-groups-09.png)
 
 ## Manage groups as Group Manager
 
 Starting from IAM version 1.8.1, when a user is a Group Manager a left tab _Managed groups_
-that lists the groups they are group manager of appears in the homepage.
+that lists the groups they are group managers of appears in the homepage.
 
 ![INDIGO IAM Managed groups tab](../images/IAM-groups-10.png)
 
-Once the Group Manager click on a group, what they can see in the upper tabs is
+Once the Group Manager clicks on a group, what they can see in the upper tabs is
 
 * detailed view of group information (_Group information_)
 * list of children groups, if any (_Subgroups_)
