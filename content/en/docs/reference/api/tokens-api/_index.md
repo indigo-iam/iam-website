@@ -5,9 +5,8 @@ title: IAM Token management API
 The IAM server has a RESTful API used to list and revoke active access and
 refresh tokens.
 
-Access to the API is limited to users with administrator privileges (either
-authenticated via a web session or through OAuth). If using OAuth,
-be sure that the access token is obtained with an authorization code/device flow.  
+Access to the API is limited to users with administrator privileges authenticated via a web session or
+to access token containing predefined restricted System Scopes.  
 All examples assume authorization via OAuth2 bearer token; e.g.
 
 ```
@@ -24,9 +23,15 @@ These are the tokens REST API endpoints:
 - [GET /iam/api/access-tokens/:id](#get-iamapiaccess-tokensid)
 - [GET /iam/api/refresh-tokens](#get-iamapirefresh-tokens)
 - [GET /iam/api/refresh-tokens/:id](#get-iamapirefresh-tokensid)
+- [DELETE /iam/api/access-tokens/:id](#delete-iamapiaccess-tokensid)
+- [DELETE /iam/api/refresh-tokens/:id](#delete-iamapirefresh-tokensid)
 
 **Deleting tokens**:
 
+- [GET /iam/api/access-tokens](#get-iamapiaccess-tokens)
+- [GET /iam/api/access-tokens/:id](#get-iamapiaccess-tokensid)
+- [GET /iam/api/refresh-tokens](#get-iamapirefresh-tokens)
+- [GET /iam/api/refresh-tokens/:id](#get-iamapirefresh-tokensid)
 - [DELETE /iam/api/access-tokens/:id](#delete-iamapiaccess-tokensid)
 - [DELETE /iam/api/refresh-tokens/:id](#delete-iamapirefresh-tokensid)
 
@@ -35,7 +40,7 @@ These are the tokens REST API endpoints:
 
 Retrieves the paginated list of all the active access tokens. Returns results in _application/json_.
 
-Requires **ROLE_ADMIN**.
+Requires `iam:admin.read` scope.
 
 Parameters:
 
@@ -95,7 +100,7 @@ GET http://example.com:8080/iam/api/access-tokens
 
 Retrieves all the information about the access token identified by **id** and returns results in _application/json_.
 
-Requires **ROLE_ADMIN**.
+Requires `iam:admin.read` scope.
 
 ```
 GET http://example.com:8080/iam/api/access-tokens/6
@@ -138,7 +143,7 @@ GET http://example.com:8080/iam/api/access-tokens/6
 
 Retrieves the paginated list of all the active refresh tokens. Returns results in _application/json_.
 
-Requires **ROLE_ADMIN**.
+Requires `iam:admin.read` scope.
 
 Parameters:
 
@@ -194,7 +199,7 @@ GET http://example.com:8080/iam/api/refresh-tokens
 
 Retrieves all the information about the refresh token identified by **id** and returns results in _application/json_.
 
-Requires **ROLE_ADMIN**.
+Requires `iam:admin.read` scope.
 
 ```
 GET http://example.com:8080/iam/api/refresh-tokens/1083
@@ -232,7 +237,7 @@ GET http://example.com:8080/iam/api/refresh-tokens/1083
 
 Revoke the access token identified by **id**.
 
-Requires **ROLE_ADMIN**.
+Requires `iam:admin.write` scope.
 
 ```
 DELETE http://example.com:8080/iam/api/access-tokens/6
@@ -247,7 +252,7 @@ DELETE http://example.com:8080/iam/api/access-tokens/6
 
 Revoke the access token identified by **id**.
 
-Requires **ROLE_ADMIN**.
+Requires `iam:admin.write` scope.
 
 ```
 DELETE http://example.com:8080/iam/api/refresh-tokens/1083

@@ -27,7 +27,7 @@ Remember that there are three roles in Indigo IAM: Amdin, User, Group Manager.
 
 Retrieves user attributes. The {id} refers to the account identifier.
 
-Requires that the user has `ROLE_ADMIN`, `ROLE_GM`, or is the one represented by the {id}.
+Requires that the Access Token contains the restricted System Scope `iam:admin.read`, or the token subject is the one represented by the {id}.
 
 ```bash
 $ curl -s -H "Authorization: Bearer ${AT}" \
@@ -44,7 +44,7 @@ $ curl -s -H "Authorization: Bearer ${AT}" \
 
 Adds attributes to the user account. It can be done directly through the IAM dashboard by clicking on "Set attribute" button in *Attributes* section of the user homepage.
 
-Requires `ROLE_ADMIN`.
+Requires `iam:admin.write` scope.
 
 ```bash
 $ curl -X PUT -H "Accept: application/json" \
@@ -66,7 +66,7 @@ where ```attribute.json``` is:
 
 Deletes user attribute by adding the query parameter at the end of the endpoint.
 
-Requires `ROLE_ADMIN`.
+Requires `iam:admin.write` scope.
 
 ```bash
 $ curl -X DELETE -H "Authorization: Bearer ${AT}" \
@@ -79,7 +79,7 @@ $ curl -X DELETE -H "Authorization: Bearer ${AT}" \
 
 Retrieves user roles.
 
-Requires `ROLE_ADMIN` or `ROLE_GM`.
+Requires `iam:admin.read` scope.
 
 ```bash
 $ curl -s -H "Authorization: Bearer ${AT}" \
@@ -98,7 +98,7 @@ The above example shows that the Test User is also a group manager (of group wit
 
 Adds an authority to the user.
 
-Requires `ROLE_ADMIN`.
+Requires `iam:admin.write` scope.
 
 ```bash
 $ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
@@ -110,7 +110,7 @@ $ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
 
 Revokes user authority by specifying the query parameter.
 
-Requires `ROLE_ADMIN`.
+Requires `iam:admin.write` scope.
 
 ```bash
 $ curl -X DELETE -H "Authorization: Bearer ${AT}" \
@@ -151,7 +151,7 @@ $ curl -s -H "Authorization: Bearer ${AT}" \
 
 Filters user information by label, e-mail, username, certificate subject or group/notingroup.
 
-Requires `ROLE_ADMIN`.
+Requires `iam:admin.read` scope.
 
 | Option | Attribute | Value |
 | -------- | -------- | -------- |
@@ -221,7 +221,7 @@ Examples of the available options:
 
 Adds user to a group. It can be done directly through the IAM dashboard as explained [here][group membership section].
 
-Requires `ROLE_ADMIN` or `ROLE_GM`.
+Requires `iam:admin.write` scope.
 
 ```bash
 $ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
@@ -234,7 +234,7 @@ $ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
 
 Removes user from a specific group.
 
-Requires `ROLE_ADMIN` or `ROLE_GM`.
+Requires `iam:admin.write` scope.
 
 ```bash
 $ curl -X DELETE -H "Authorization: Bearer ${AT}" \
@@ -247,7 +247,7 @@ $ curl -X DELETE -H "Authorization: Bearer ${AT}" \
 
 Lists the user's managed and not managed groups.
 
-Requires that the user has `ROLE_ADMIN` or is the one represented by the {id}.
+Requires that the Access Token contains the restricted System Scope `iam:admin.read`, or the token subject is the one represented by the {id}.
 
 ```bash
 $ curl -s -H "Authorization: Bearer ${AT}" \
@@ -273,7 +273,7 @@ $ curl -s -H "Authorization: Bearer ${AT}" \
 
 Gives a user represented by {id} `ROLE_GM` privileges of the group identified by {groupId}.
 
-Requires `ROLE_ADMIN`.
+Requires `iam:admin.write` scope.
 
 ```bash
 $ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
@@ -286,7 +286,7 @@ $ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
 
 Removes a group manager from a certain group.
 
-Requires `ROLE_ADMIN`.
+Requires `iam:admin.write` scope.
 
 ```bash
 $ curl -X DELETE -H "Authorization: Bearer ${AT}" \
@@ -297,7 +297,7 @@ $ curl -X DELETE -H "Authorization: Bearer ${AT}" \
 
 Shows the information of managers in a certain group.
 
-Requires `ROLE_ADMIN` or `ROLE_GM` privileges of the group identified by {groupId}.
+Requires that the Access Token contains the restricted System Scope `iam:admin.read`, or `ROLE_GM` privileges of the group identified by {groupId}.
 
 ```bash
 $ curl -s -H "Authorization: Bearer ${AT}" \
@@ -332,7 +332,7 @@ $ curl -s -H "Authorization: Bearer ${AT}" \
 
 Shows the user account labels.
 
-Requires that the user has `ROLE_ADMIN`, `ROLE_GM`, or is the one represented by the {id}.
+Requires that the Access Token contains the restricted System Scope `iam:admin.read`, or the token subject is the one represented by the {id}.
 
 ```bash
 $ curl -s -H "Authorization: Bearer ${AT}" \
@@ -349,7 +349,7 @@ $ curl -s -H "Authorization: Bearer ${AT}" \
 
 Adds labels to user account.
 
-Requires `ROLE_ADMIN`.
+Requires `iam:admin.write` scope.
 
 ```bash
 $ curl -X PUT -H "Content-Type: application/json" \
@@ -370,7 +370,7 @@ where `labels.json` is:
 
 Deletes an account label by specifying the label name and the label prefix (if present).
 
-Requires `ROLE_ADMIN`.
+Requires `iam:admin.write` scope.
 
 ```bash
 $ curl -X DELETE -H "Authorization: Bearer ${AT}" \
@@ -385,7 +385,7 @@ $ curl -X DELETE -H "Authorization: Bearer ${AT}" \
 Adds/changes the membership end time of the user. It can be done directly through the IAM dashboard 
 by clicking on "Change membership end time" button in the user homepage.
 
-Requires `ROLE_ADMIN`.
+Requires `iam:admin.write` scope.
 
 ```bash
 $ curl -X PUT -d @endTime.json \
@@ -410,6 +410,8 @@ Adds user proxy certificate. It can be done directly through the IAM dashboard
 by clicking on "Add managed proxy certificate" button 
 appearing on the user homepage after uploading the X.509 certificate.
 
+When using curl commands, it requires the restricted System Scope `iam:admin.write` in the Access Token.
+
 ```bash
 $ curl -i -X PUT -d @proxy.json \
   -H "Authorization: Bearer ${AT}" \
@@ -429,7 +431,7 @@ where `proxy.json` includes only the *certificate_chain* key:
 
 Shows the list of IAM accounts.
 
-Requires `ROLE_ADMIN`, `ROLE_GM` or `scim:read` scope.
+Requires `iam:admin.read` scope.
 
 ```bash
 $ curl -s -H "Authorization: Bearer ${AT}" \
@@ -470,7 +472,7 @@ $ curl -s -H "Authorization: Bearer ${AT}" \
 
 Shows the list of IAM groups.
 
-Access granted to all IAM users or `scim:read` scope.
+Access granted to all IAM users or `iam:admin.read` scope.
 
 ```bash
 $ curl -s -H "Authorization: Bearer ${AT}" \

@@ -7,8 +7,8 @@ Identity Management (SCIM) standard][scim], that
 can be used to manage users, change their personal information, manage their
 group membership, etc. 
 
-Access to the API is restricted to administrator users or OAuth clients that
-have access to the `scim:read` (for read access) or `scim:write` (for write
+Access to the API is restricted to administrator users authenticated via web interface
+or OAuth clients that have access to the `scim:read` (for read access) or `scim:write` (for write
 access) OAuth scopes.
 Note that these scopes are restricted in the default IAM configuration, i.e.
 can be assigned to clients only by IAM administrators.
@@ -373,7 +373,7 @@ Retrieves information about the currently authenticated user.
 
 Retrieves all the information about the user identified by `id` and returns results in application/json.
 
-Requires `ROLE_ADMIN` or scope `scim:read`.
+Requires `scim:read` scope.
 
     GET http://localhost:8080/scim/Users/2cb10ac5-5b1a-47a0-8f60-48995999f18d
 
@@ -412,7 +412,7 @@ Requires `ROLE_ADMIN` or scope `scim:read`.
 
 Creates a new user, using the info specified within the request body, sent as application/json.
 
-Requires `ROLE_ADMIN` or scope `scim:write`.
+Requires `scim:write` scope.
 
     POST http://localhost:8080/scim/Users/
 
@@ -470,7 +470,7 @@ Upon successful creation, the response body contains the newly created User.
 
 ## GET `/scim/Users`
 
-Requires `ROLE_ADMIN` or scope `scim:read`.
+Requires `scim:read` scope.
 
 SCIM defines a standard set of operations that can be used to filter, sort, and
 paginate response results. The operations are specified by adding query
@@ -667,7 +667,7 @@ SCIM **Filtering** and **sorting** of results are currently not supported.
 
 ## PUT `/scim/Users/{id}`
 
-Requires `ROLE_ADMIN` or scope `scim:write`.
+Requires `scim:write` scope.
 
 PUT performs a full update. Clients should retrieve the entire resource and
 then PUT the desired modifications as the operation overwrites all previously
@@ -762,7 +762,7 @@ The returned answer is:
 
 ## PATCH `/scim/Users/{id}`
 
-Requires `ROLE_ADMIN` or scope `scim:write`.
+Requires `scim:write` scope.
 
 PATCH enables consumers to send only the attributes requiring modification,
 reducing network and processing overhead. Attributes may be deleted, replaced,
@@ -824,7 +824,7 @@ The following example shows how to add an OpenID Connect account and a ssh key:
 
 ## DELETE `/scim/Users/{id}`
 
-Requires `ROLE_ADMIN` or scope `scim:write`.
+Requires `scim:write` scope.
 
 Clients request user removal via DELETE.
 
@@ -848,7 +848,7 @@ Example: Client attempt to retrieve the previously deleted User:
 Retrieves information about the group identified by `id` and returns results in
 application/json.
 
-Requires `ROLE_ADMIN` or scope `scim:read`.
+Requires `scim:read` scope.
 
     GET /scim/Groups/c617d586-54e6-411d-8e38-64967798fa8a
 
@@ -884,7 +884,7 @@ Returns a paginated list of user accounts, ordered by username, which are
 members of the group identified by `id`. To know about more about pagination
 parameters, see the [Pagination section](#pagination).
 
-Requires `ROLE_ADMIN` or scope `scim:read`.
+Requires `scim:read` scope.
 
     GET https://wlcg.cloud.cnaf.infn.it/scim/Groups/b86a9e99-9f0e-478f-999c-2046c764aa14/members?count=5
 
@@ -932,7 +932,7 @@ Returns a paginated list of groups, ordered by name, which are direct sub-groups
 identified by `id`. To know about more about pagination parameters, see the
 [Pagination section](#pagination).
 
-Requires `ROLE_ADMIN` or scope `scim:read`.
+Requires `scim:read` scope.
 
     GET https://wlcg.cloud.cnaf.infn.it/scim/Groups/b86a9e99-9f0e-478f-999c-2046c764aa14/subgroups?count=10
 
@@ -968,7 +968,7 @@ Requires `ROLE_ADMIN` or scope `scim:read`.
 
 Creates a new group, using the info specified within the request body, sent as application/json.
 
-Requires `ROLE_ADMIN` or scope `scim:write`.
+Requires `scim:write` scope.
 
     POST http://localhost:8080/scim/Groups/
 
@@ -998,7 +998,7 @@ Successful Resource creation is indicated with a 201 ("Created") response code. 
 
 ## GET `/scim/Groups`
 
-Requires `ROLE_ADMIN` or scope `scim:read`.
+Requires `scim:read` scope.
 
 The pagination seen for users can be applied also to groups:
 
@@ -1032,7 +1032,7 @@ Example: retrieve the 22nd group
 
 ## PUT `/scim/Groups/{id}`
 
-Requires `ROLE_ADMIN` or scope `scim:write`.
+Requires `scim:write` scope.
 
 PUT performs a full update. Clients should retrieve the entire resource and
 then PUT the desired modifications as the operation overwrites all previously
@@ -1066,7 +1066,7 @@ Example of replacing group with a different displayName:
 
 ## PATCH `/scim/Groups/{id}`
 
-Requires `ROLE_ADMIN` or scope `scim:write`.
+Requires `scim:write` scope.
 
 The following example shows how to add member to a group:
 
@@ -1092,7 +1092,7 @@ The following example shows how to add member to a group:
 
 ## DELETE `/scim/Groups/{id}`
 
-Requires `ROLE_ADMIN` or scope `scim:write`.
+Requires `scim:write` scope.
 
 Clients request group removal via DELETE.
 

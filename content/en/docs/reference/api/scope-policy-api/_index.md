@@ -222,7 +222,9 @@ the scope `wlcg.groups:/a/group` or any other group name matching the regexp.
 ## The Scope policy API
 
 The Scope Policy API is a REST API that allows to manage scope policies.
- API requires IAM administrator privileges.
+Access to the API is restricted to administrator users authenticated via web interface
+or OAuth clients that have access to the `iam:admin.read` (for read access) or `iam:admin.write` (for write
+access) OAuth scopes.
 
 ### GET /iam/scope_policies
 
@@ -231,7 +233,7 @@ organization.
 
 **Authentication required**: yes
 
-**Authorization required**: ROLE\_ADMIN
+**Authorization required**: `iam:admin.read` scope
 
 **Command example**
 
@@ -293,7 +295,7 @@ Returns the JSON representation for the scope policy identified by `id`.
 
 **Authentication required**: yes
 
-**Authorization required**: ROLE\_ADMIN
+**Authorization required**: `iam:admin.read` scope
 
 **Command example**
 
@@ -366,7 +368,7 @@ Changes an existing Scope Policy.
 
 **Authentication required**: yes
 
-**Authorization required**: ROLE\_ADMIN
+**Authorization required**: `iam:admin.write` scope
 
 **Data constraints**
 
@@ -448,7 +450,7 @@ Creates a Scope Policy for the organization
 
 **Authentication required**: yes
 
-**Authorization required**: ROLE\_ADMIN
+**Authorization required**: `iam:admin.write` scope
 
 **Data constraints**
 
@@ -544,7 +546,7 @@ Deletes the Scope Policy for the organization.
 
 **Authentication required**: yes
 
-**Authorization required**: ROLE\_ADMIN
+**Authorization required**: `iam:admin.write` scope
 
 **Command example**
 
