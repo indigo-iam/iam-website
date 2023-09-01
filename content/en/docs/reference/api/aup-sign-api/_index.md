@@ -18,7 +18,10 @@ http://localhost:8080/iam/aup/signature/{accountId}
 
 **Authentication required**: yes
 
-**Authorization required**: ROLE\_ADMIN/ROLE\_GM or `iam:admin.read` scope or user with that _accountId_
+**Authorization required**: `iam:admin.read` scope
+
+Note that access to this API via the dashboard is role-based (ROLE\_ADMIN or ROLE\_GM)
+or possible via authenticated user with _uuid_ equal to _accountId_.
 
 #### Success response
 
@@ -47,7 +50,7 @@ http://localhost:8080/iam/aup/signature/{accountId}
 }
 ```
 
-The `/iam/aup/signature` endpoint gives the same result and can be accessed by any authenticated user.
+The `/iam/aup/signature` endpoint gives the same result and can be accessed via the dashboard by any authenticated user.
 
 #### Error response
 
