@@ -4,7 +4,7 @@ title = "INDIGO IAM"
 enableRobotsTXT = true
 
 # Hugo allows theme composition (and inheritance). The precedence is from left to right.
-theme = ["docsy"]
+theme = ["github.com/google/docsy"]
 
 # Will give values to .Lastmod etc.
 enableGitInfo = true
@@ -16,7 +16,7 @@ defaultContentLanguageInSubdir = false
 # Useful when translating.
 enableMissingTranslationPlaceholders = true
 
-disableKinds = ["taxonomy", "taxonomyTerm"]
+disableKinds = ["taxonomy"]
 
 # Highlighting config
 pygmentsCodeFences = true
@@ -42,7 +42,7 @@ latexDashes = true
 [imaging]
 resampleFilter = "CatmullRom"
 quality = 75
-anchor = "smart"
+anchor = "Smart"
 
 [services]
 [services.googleAnalytics]
@@ -54,7 +54,7 @@ anchor = "smart"
 [languages]
 [languages.en]
 title = "INDIGO IAM"
-description = "The INDIGO Identity and Access Management (IAM) Service"
+params.description = "The INDIGO Identity and Access Management (IAM) Service"
 languageName ="English"
 # Weight used for sorting.
 weight = 1
@@ -118,7 +118,7 @@ github_branch= "v1.8.3"
 # gcs_engine_id = "d72aa9b2712488cc3"
 
 # Enable Algolia DocSearch
-algolia_docsearch = false
+params.search.algolia = false
 
 # Enable Lunr.js offline search
 offlineSearch = true
