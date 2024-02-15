@@ -20,7 +20,8 @@ commands can be used  to create a database and a user for the IAM application:
 
 ```sql
 CREATE DATABASE iam_test_db CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-GRANT ALL PRIVILEGES on iam_test_db.* to 'iam_test'@'%' identified by 'some_super_secure_password';
+CREATE USER 'iam_test'@'%' identified by 'some_super_secure_password';
+GRANT ALL PRIVILEGES on iam_test_db.* to 'iam_test'@'%';
 ```
 
 You may want to restrict the set of hosts from which a mysql client can connect
