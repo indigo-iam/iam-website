@@ -387,6 +387,15 @@ IAM_NOTIFICATION_CLEANUP_AGE=30
 # link external accounts (Google, SAML) to their local IAM account
 IAM_ACCOUNT_LINKING_DISABLE=false 
 ```
+
+## Client lifecycle
+
+```bash
+# Record the last date when each client was used to create or refresh a token
+# This is used to determine which clients are considered active/inactive
+IAM_CLIENT_TRACK_LAST_USED=false
+```
+
 ## Privacy policy settings
 
 ```bash
