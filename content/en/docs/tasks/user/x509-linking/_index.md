@@ -33,7 +33,7 @@ certificate" button:
 
 ![Login page with cert recognized](../images/account-link-x509-5.png)
 
-## Linking a certificate
+## Linking a certificate via TLS handshake
 
 If a certificate was recognized but is not linked to any membership in the IAM,
 the user will have to authenticate with other credentials (local username &
@@ -59,6 +59,25 @@ be shown in the X.509 certificates panel:
 
 To check that the linking actually works, the user can logout from the IAM and
 login again with the certificate.
+
+## Request to link a certificate manually
+
+If you want to link a certificate to your account without adding it to your browser, you can
+use the certificate linking request button
+
+![INDIGO IAM Certificate Linking Request button](../images/cert-link-request.png)
+
+You can paste the certificate PEM content:
+
+![INDIGO IAM Certificate Linking Request form1](../images/select-cert-via-pem.png)
+
+or insert the subject DN (with RFC2253 format) 
+and select the issuer among the available ones:
+
+![INDIGO IAM Certificate Linking Request form2](../images/select-cert-via-dns.png)
+
+After the submission a mail will be sent to the administrator, who can approve or
+reject the request. You will be notified via mail of the request outcome.
 
 ## Unlinking a certificate
 

@@ -52,5 +52,11 @@ for a local user account from the user home page:
 
 ![Manage credentials](../images/manage-credentials.png)
 
+The users can also request to link a certificate to their account. The administrator 
+will receive an email with the request and can use the "Requests" page to approve or reject
+it. The user will then be notified via mail of the request outcome.
+
+![Manage cert link requests](../images/cert-link-request-approval.png)
+
 
 
