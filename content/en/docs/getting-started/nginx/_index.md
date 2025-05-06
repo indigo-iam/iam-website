@@ -48,7 +48,7 @@ In particular, set the `ssl_verify_client=Optional` option and configure the `pr
 directory as follows: 
 
 ```nginx
-proxy_set_header        X-SSL-Client-Cert $ssl_client_cert;
+proxy_set_header        X-SSL-Client-Cert $ssl_client_escaped_cert;
 proxy_set_header        X-SSL-Client-I-Dn $ssl_client_i_dn;
 proxy_set_header        X-SSL-Client-S-Dn $ssl_client_s_dn;
 proxy_set_header        X-SSL-Client-Serial $ssl_client_serial;
@@ -57,4 +57,20 @@ proxy_set_header        X-SSL-Client-V-End   $ssl_client_v_end;
 proxy_set_header        X-SSL-Client-Verify  $ssl_client_verify;
 proxy_set_header        X-SSL-Protocol $ssl_protocol;
 proxy_set_header        X-SSL-Server-Name $ssl_server_name;
+```
+
+### HAProxy
+
+To enable X.509 client certificate authentication when using HAProxy, configure it to forward 
+the equivalent headers using the following directives:
+
+```
+http-request set-header X-SSL-Client-Cert %{+Q}[ssl_c_der,base64]
+http-request set-header X-SSL-Client-S-Dn %{+Q}[ssl_c_s_dn]
+http-request set-header X-SSL-Client-I-Dn %{+Q}[ssl_c_i_dn]
+http-request set-header X-SSL-Client-Serial %{+Q}[ssl_c_serial]
+http-request set-header X-SSL-Client-V-Start %{+Q}[ssl_c_notbefore]
+http-request set-header X-SSL-Client-V-End %{+Q}[ssl_c_notafter]
+http-request set-header X-SSL-Protocol %[ssl_fc_protocol]
+http-request set-header X-SSL-Client-Verify %{+Q}[ssl_c_verify,x509_v_err_str]
 ```
