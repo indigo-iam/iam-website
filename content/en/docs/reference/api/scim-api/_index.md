@@ -27,6 +27,7 @@ Resources defined in the [SCIM core schema specification][scim-core-schema].
 IAM implements the following SCIM endpoints: 
 
 -   `/scim/Users`, providing access to user account resources;
+-   `/scim/Users/Bulk`, providing access to bulk user operations in a single request;
 -   `/scim/Groups`, providing access to group resources;
 -   `/scim/Me`, providing access to the user account resource for the currently
     authenticated user.
@@ -842,6 +843,187 @@ Example: Client attempt to retrieve the previously deleted User:
             "urn:ietf:params:scim:api:messages:2.0:Error"
         ]
     }
+
+## POST `/scim/Users/Bulk`
+
+Requires `scim:write` scope.
+
+This endpoint allows consumers to execute multiple operations through one request, reducing network and processing overhead. Users may be created or updated in bulk using the `POST` and `PATCH` HTTP methods.
+
+The body of this request MUST contain a list of operations where each operation includes a supported HTTP method (`POST` or `PATCH` only). The body of each operation MUST also contain a `path` attribute with the resource’s relative path to the SCIM service provider’s root and a `data` attribute with the resources required for a single `POST` or `PATCH` operation. `POST` operations MUST include a `bulkId` attribute to uniquely identify the new resource for cross-referencing within the same request.
+
+If the request is successful, a 200 OK response code will be returned containing the result of all processed operations. Each operation response contains a `status` attribute that details the HTTP response status code of the requested operation. If the `status` of the operation response is not within the 200-series, it will also contain a response body. If the requested operation is successful, its response will include a `location` attribute with the resource’s endpoint. If the requested operation is unsuccessful, the response body will contain the details of the error.
+
+Example with two bulk operations: the first uses the `POST` method to create a user and the second uses the `PATCH` method to update user credentials.
+
+    POST http://localhost:8080/scim/Users/Bulk
+
+```json
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:BulkRequest"
+  ],
+  "operations": [
+    {
+      "method": "POST",
+      "path": "/Users",
+      "bulkId": "qwerty",
+      "data": {
+        "id": "75ad58a5-1d1f-f77e-0f3e-4f9d5e45ae35",
+        "schemas": [
+          "urn:ietf:params:scim:schemas:core:2.0:User"
+        ],
+        "displayName": "Patrick Star",
+        "name": {
+          "givenName": "Patrick",
+          "familyName": "Star",
+          "middleName": ""
+        },
+        "emails": [
+          {
+            "type": "work",
+            "value": "patrick@star.com",
+            "primary": true
+          }
+        ],
+        "userName": "partickstar",
+        "active": true,
+        "picture": ""
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/Users/73f16d93-2441-4a50-88ff-85360d78c6b5",
+      "data": {
+        "schemas": [
+          "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+        ],
+        "operations": [
+          {
+            "op": "add",
+            "value": {
+              "displayName": "Paul McCartney",
+              "name": {
+                "givenName": "Paul",
+                "familyName": "McCartney",
+                "middleName": ""
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+All operations are executed even if there are partial failures. In the example request, the `POST` operation is expected to fail as the user already exists. The returned response is:
+
+    HTTP/1.1 200 OK
+    Content-Type: application/scim+json;charset=UTF-8
+```json
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:BulkResponse"
+    ],
+    "operations": [
+        {
+            "method": "POST",
+            "status": "409",
+            "bulkId": "qwerty",
+            "errorResponse": {
+                "status": "409",
+                "detail": "A user with username 'partickstar' already exists",
+                "schemas": [
+                    "urn:ietf:params:scim:api:messages:2.0:Error"
+                ]
+            }
+        },
+        {
+            "method": "PATCH",
+            "status": "200",
+            "location": "/Users/73f16d93-2441-4a50-88ff-85360d78c6b5"
+        }
+    ]
+}
+```
+
+The bulkId attribute, which is REQUIRED for all `POST` operations, MUST be unique within the request. It should not contain personally identifiable information as it may appear in logs or error messages. Resources created by a `POST` operation can be referenced in subsequent operations using the `bulkId`, with the prefix `bulkId:`, to update users that are being created in the same bulk request.
+
+An example of a request where a user is created and later updated using the bulkId in the operation path `/Users/bulkid:qwerty`.
+
+    POST http://localhost:8080/scim/Users/Bulk
+
+```json
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:BulkRequest"
+  ],
+  "operations": [
+    {
+      "method": "POST",
+      "path": "/Users",
+      "bulkId": "qwerty",
+      "data": {
+        "id": "75ad58a5-1d1f-f77e-0f3e-4f9d5e45ae35",
+        "schemas": [
+          "urn:ietf:params:scim:schemas:core:2.0:User"
+        ],
+        "displayName": "Patrick Star",
+        "name": {
+          "givenName": "Patrick",
+          "familyName": "Star",
+          "middleName": ""
+        },
+        "emails": [
+          {
+            "type": "work",
+            "value": "patrick@star.com",
+            "primary": true
+          }
+        ],
+        "userName": "partickstar",
+        "active": true,
+        "picture": ""
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/Users/bulkid:qwerty",
+      "data": {
+        "schemas": [
+          "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+        ],
+        "operations": [
+          {
+            "op": "add",
+            "value": {
+              "displayName": "Paul McCartney",
+              "name": {
+                "givenName": "Paul",
+                "familyName": "McCartney",
+                "middleName": ""
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+If the client specifies the optional failOnErrors attribute, the request will terminate once the number of failures exceeds this value and an error code response will be returned. If the number of operations in the request exceeds the maximum, an HTTP 413 PAYLOAD TOO LARGE response code will be returned, including the maximum number of allowed operations.
+
+    HTTP/1.1 413 PAYLOAD TOO LARGE
+    Content-Type: application/json
+```json
+{
+  "status": "413",
+  "detail": "Maximum number of operations exceeded (500)",
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:Error"
+  ]
+}
+```
 
 ## GET `/scim/Groups/{id}`
 
