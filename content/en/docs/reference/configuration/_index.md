@@ -381,6 +381,9 @@ IAM_NOTIFICATION_TASK_DELAY=30000
 # Retention of delivered messages, in days
 IAM_NOTIFICATION_CLEANUP_AGE=30
 ```
+
+For more customization of the notification service settings, see the [IAM Notifications section]({{< ref "/docs/reference/configuration/notifications" >}}).
+
 ## Account linking settings
 
 ```bash
