@@ -149,7 +149,7 @@ $ curl -s -H "Authorization: Bearer ${AT}" \
 
 ### GET `/iam/account/find/{option}`
 
-Filters user information by label, e-mail, username, certificate subject or group/notingroup.
+Filters user information by label, e-mail, username, certificate subject, autority or group/notingroup.
 
 Requires `iam:admin.read` scope.
 
