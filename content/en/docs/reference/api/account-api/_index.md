@@ -8,7 +8,7 @@ IAM implements the following endpoints:
 * ```/iam/account/{id}/attributes```, providing access to user attributes
 * ```/iam/account/{id}/authorities```, providing access to user authorities/roles
 * ```/iam/account/me/clients```, providing access to clients owned by the user
-* ```/iam/account/find/{option}```, searching users by username/label/e-mail/group/certificate subject
+* ```/iam/account/find/{option}```, searching users by username/label/e-mail/group/certificate subject/authority
 * ```/iam/account/{id}/groups/{groupId}```, providing access to user groups
 * ```/iam/account/{id}/managed-groups```, providing access to groups to which a user is manager
 * ```/iam/group/{groupId}/group-managers```, listing managers of a certain group
@@ -159,6 +159,7 @@ Requires `iam:admin.read` scope.
 |   bylabel   |   name   | string     |
 |   byemail   |   email   | string     |
 |   bycertsubject   |   certificateSubject   | URL-encoded     |
+|   byauthority   |   authority   | String |
 
 Examples of the available options:
 * byusername
@@ -201,6 +202,12 @@ Examples of the available options:
     ```bash
     $ curl -s -H "Authorization: Bearer $AT" \
       http://localhost:8080/iam/account/find/bycertsubject?certificateSubject=CN%3dTest%20User%20test%40infn.it%2cO%3dIstituto%20Nazionale%20di%20Fisica%20Nucleare%2cC%3dIT%2cDC%3dtcs%2cDC%3dterena%2cDC=org
+    ```
+
+* byauthority (possible authorities are: `admin`, `user`, `gm:<uuid>`, `reader`, `pre_authenticated`)
+    ```bash
+    $ curl -s -H "Authorization: Bearer $AT" \
+      http://localhost:8080/iam/account/find/byauthority?authority=admin
     ```
 
 * bygroup/{groupId}
