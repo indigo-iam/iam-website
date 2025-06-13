@@ -218,8 +218,8 @@ IAM_CLIENT_FORWARD_HEADERS_STRATEGY=none
 
 ## Redis configuration
 
-Starting with version 1.8.0, IAM supports storing HTTP session
-information in an external [redis][redis] server.
+IAM supports storing HTTP session information and its in-memory cache
+(for the well-known endpoint and scope matchers) in an external [redis][redis] server.
 
 This can be useful when [deploying multiple replicas of the IAM
 service](../../../docs/tasks/deployment/ha).
@@ -237,6 +237,8 @@ IAM_SPRING_REDIS_PORT=6397
 # Leave it empty in case the server does not require any password
 IAM_SPRING_REDIS_PASSWORD=secret
 
+## Session settings
+
 # Duration of an HTTP session
 IAM_SESSION_TIMEOUT_SECS=1800
 
@@ -247,6 +249,17 @@ IAM_SPRING_SESSION_STORE_TYPE=none
 # If set to 'true' the status of the Redis service
 # will appear in the IAM Health check endpoint
 IAM_HEALTH_REDIS_PROBE_ENABLED=false
+
+## Cache settings
+
+# Enable the caching mechanism in IAM.
+# When set to 'false', no-one kind of cache will be used.
+# The default behavior is an in-memory cache
+IAM_CACHE_ENABLED=true
+
+# Allow to cache the IAM information (i.e. well-known endpoint and
+# scope matchers) into an external Redis service
+IAM_CACHE_REDIS_ENABLED=false
 ```
 
 ## Local authentication settings
