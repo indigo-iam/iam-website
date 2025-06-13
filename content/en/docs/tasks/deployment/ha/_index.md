@@ -7,7 +7,7 @@ description: >
 
 Starting from version 1.8.0, the IAM service can be deployed in High Availability mode.  
 It relies on [redis] as external component used for storing the
-log-in sessions, which has to be deployed as well.
+log-in sessions and the default in-memory IAM cache, which has to be deployed as well.
 
 Here is an example on how to deploy three IAM replicas on a [kubernetes] cluster.
 
@@ -94,8 +94,9 @@ You can set there the [Configuration properties](../../../reference/configuratio
 used to enable Redis. The minimal ones required, for a password less Redis service are
 
 ```bash
-IAM_SPRING_SESSION_STORE_TYPE=redis
 IAM_SPRING_REDIS_HOST=redis.example
+IAM_SPRING_SESSION_STORE_TYPE=redis
+IAM_CACHE_REDIS_ENABLED=true
 ```
 
 ### Redis service Deployment
