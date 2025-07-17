@@ -436,9 +436,34 @@ where `proxy.json` includes only the *certificate_chain* key:
 
 ### GET `/iam/account/search`
 
-Shows the list of IAM accounts.
+Shows a list of IAM accounts.
 
 Requires `iam:admin.read` scope.
+
+Possible search parameters are:
+
+- name
+- username
+- email
+- Id
+- subjectDN from a possible X509 certificate
+
+Given that no query parameters have been added, then the first 10 users will be returned. 
+Pagnation is not session based so one can never assume repeatable results. The pagnation follows the one described in [Scim-api][Scim-pagnation] with the following addition of sorting the results in an asceding or decending order using the email addresses, the creation time or the name as a way of sorting. 
+
+The following query parameters are available: 
+
+| Paramter | Description | Default value |
+| -------- | -------- | -------- |
+|   startIndex   |   The 1-based index of the first search result.    | 1     |
+|   count   |   Non-negative Integer. Specifies the desired maximum number of search results per page.   | 10     |
+|   filter   |   String used for searching through the values of the attributes for the accounts. Attributes are: email, subjectDn of a X509 certificate, username, Id, and name.   | None.     |
+|   sortBy   |   Determines what attribute to sort the results by. Attributes are: creation, email and name.   | name     |
+|   sortDirection   |   Determines the ordering strategy. Options are: asc and desc   | asc |
+
+<br />
+
+The example below returns the first 10 users. 
 
 ```bash
 $ curl -s -H "Authorization: Bearer ${AT}" \
@@ -475,6 +500,120 @@ $ curl -s -H "Authorization: Bearer ${AT}" \
     ...
 ```
 
+The following example returns the 5 first users, who has one of the aformentioned filtering attributes containing "@iam" in a descing order according to the names (implicit sorting attribute is name)
+
+    search?filter=@iam&count=5&sortDirection=desc
+
+```json
+{
+  "totalResults": 7,
+  "itemsPerPage": 5,
+  "startIndex": 1,
+  "Resources": [
+    {
+      "id": "80e5fb8d-b7c8-451a-89ba-346ae278a66f",
+      "meta": {
+        "created": "2025-07-17T15:27:16.436+02:00",
+        "lastModified": "2025-07-17T15:27:16.436+02:00",
+        "location": "http://localhost:8080/scim/Users/80e5fb8d-b7c8-451a-89ba-346ae278a66f",
+        "resourceType": "User"
+      },
+      "userName": "test",
+      "name": {
+        "familyName": "User",
+        "formatted": "Test User",
+        "givenName": "Test"
+      },
+      "displayName": "test",
+      "active": true,
+      "emails": [
+        {
+          "type": "work",
+          "value": "test@iam.test",
+          "primary": true
+        }
+      ],
+      "groups": [
+        {
+          "display": "Production",
+          "value": "c617d586-54e6-411d-8e38-64967798fa8a",
+          "$ref": "http://localhost:8080/scim/Groups/c617d586-54e6-411d-8e38-64967798fa8a"
+        },
+        {
+          "display": "Analysis",
+          "value": "6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1",
+          "$ref": "http://localhost:8080/scim/Groups/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1"
+        }
+      ]
+    },
+    {
+      "id": "467c882e-90da-11ec-b909-0242ac120002",
+      "meta": {
+        "created": "2025-07-17T15:27:16.436+02:00",
+        "lastModified": "2025-07-17T15:27:16.436+02:00",
+        "location": "http://localhost:8080/scim/Users/467c882e-90da-11ec-b909-0242ac120002",
+        "resourceType": "User"
+      },
+      "userName": "test-with-mfa",
+      "name": {
+        "familyName": "MFA",
+        "formatted": "Test MFA",
+        "givenName": "Test"
+      },
+      "displayName": "test-with-mfa",
+      "active": true,
+      "emails": [
+        {
+          "type": "work",
+          "value": "testwithmfa@iam.test",
+          "primary": true
+        }
+      ]
+    },
+    ... 
+  ]
+}
+```
+
+The following example returns the users who have one of the aformentioned filtering attributes containing the value "CN=test2,O=IGI,C=IT":
+
+    search?filter=CN=test2,O=IGI,C=IT
+
+```json
+{
+  "totalResults": 1,
+  "itemsPerPage": 1,
+  "startIndex": 1,
+  "Resources": [
+    {
+      "id": "73f16d93-2441-4a50-88ff-85360d78c6b5",
+      "meta": {
+        "created": "2025-07-17T15:27:15.263+02:00",
+        "lastModified": "2025-07-17T15:27:15.263+02:00",
+        "location": "http://localhost:8080/scim/Users/73f16d93-2441-4a50-88ff-85360d78c6b5",
+        "resourceType": "User"
+      },
+      "userName": "admin",
+      "name": {
+        "familyName": "User",
+        "formatted": "Admin User",
+        "givenName": "Admin"
+      },
+      "displayName": "admin",
+      "active": true,
+      "emails": [
+        {
+          "type": "work",
+          "value": "1_admin@iam.test",
+          "primary": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+[Scim-pagnation]: https://indigo-iam.github.io/v/v1.12.0/docs/reference/api/scim-api/#pagination
 ### GET `/iam/group/search`
 
 Shows the list of IAM groups.
