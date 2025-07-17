@@ -147,11 +147,39 @@ In particular:
 
 All the mapping rules are described in the [White Paper for implementation mappings between SAML 2.0 and OpenID Connect in Research and Education](https://docs.google.com/document/d/1b-Mlet3Lq7qKLEf1BnHJ4nL1fq-vMe7fzpXyrq2wp08/edit).
 
+Moreover, the unique identifier `voperson_id` claim is available through this profile and follows the rules defined by the [AARC G026][aarc-g026] and the [voPerson v2.0][voPerson-v2.0] schema version.
+
+`voPerson_id` is the community unique identifier and it holds the same value as the accountID given by Indigo IAM.
+This claim is currently present within the following places (given the AARC profile is enabled):
+
+- ID token
+- Access Token
+- Userinfo response
+- Introspection response
+
+An example for the Access Token could be the following (produced via the Test client): 
+
+```json
+{
+  "sub": "73f16d93-2441-4a50-88ff-85360d78c6b5",
+  "voperson_id": "73f16d93-2441-4a50-88ff-85360d78c6b5",
+  "iss": "http://localhost:8080",
+  "exp": 1752744217,
+  "iat": 1752740617,
+  "jti": "b13a5593-2bfc-42c6-9216-9b0a280905a9",
+  "client_id": "client"
+}
+```
+
+From the example, one can see that the value from the `sub` and the `voperson_id` claim is identical. 
+
 This profile is assigned to clients using the `aarc` scope.
 
 [system-scopes]: {{< ref "docs/reference/configuration/system-scopes" >}}
 [wlcg-profile]: https://zenodo.org/record/3460258
 [aarc-g002]: https://aarc-project.eu/guidelines/aarc-g002/
+[aarc-g026]: https://zenodo.org/record/5504407/files/AARC-G026%20-%20Guidelines%20for%20expressing%20community%20user%20identifiers.pdf
+[voPerson-v2.0]: https://github.com/voperson/voperson/blob/draft-2.0.0/voPerson.md#vopersonid-attribute-definition
 
 ### The Keycloak profile
 
