@@ -6,7 +6,7 @@ weight: 1
 
 To enhance account security and align with modern security standards, Multi-Factor Authentication (MFA) has been introduced in the INDIGO IAM service.
 
-MFA allows users to add an additional layer of security by registering a second authentication factor. Once enabled, a username and password alone will no longer suffice for login access.
+MFA allows users to add an additional layer of security by registering a second authentication factor. Once enabled, a single credential will no longer suffice for login access.
 
 The primary goals of MFA are:
 
@@ -15,9 +15,9 @@ The primary goals of MFA are:
 
 To enable MFA, the `mfa` profile must be configured.
 
-{{% alert title="Warning" color="warning" %}}
-MFA support is experimental and limited.
-In particular, at the moment it is applicable only to **login with username and password**.
+{{% alert title="Info" color="info" %}}
+**MFA support is experimental**.
+It is applicable to login with username and password, login with SAML/OIDC external providers, login with X.509 certificates.
 {{% /alert %}}
 
 ## How to enable MFA
@@ -48,7 +48,7 @@ Steps to enable MFA:
 
     Once MFA is enabled, each login will require:
 
-    * Username and password
+    * A primary authentication method (e.g., username and password, SSO or X.509 certificate)
     * A second factor (the TOTP) entered on a follow-up page
 
     ![2FA](2FA.png)
