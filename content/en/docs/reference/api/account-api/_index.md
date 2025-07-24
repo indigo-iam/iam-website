@@ -446,18 +446,18 @@ Possible search parameters are:
 - username
 - email
 - Id
-- subjectDN from a possible X509 certificate
+- subjectDn from a possible X.509 certificate
 
 Given that no query parameters have been added, then the first 10 users will be returned. 
-Pagnation is not session based so one can never assume repeatable results. The pagnation follows the one described in [Scim-api][Scim-pagnation] with the following addition of sorting the results in an asceding or decending order using the email addresses, the creation time or the name as a way of sorting. 
+Pagination is not session-based, so one can never assume repeatable results. The pagination follows the one described in [Scim-api][Scim-pagination] with the addition of sorting the results in an ascending or descending order using the email addresses, the creation time or the name as a way of sorting. 
 
 The following query parameters are available: 
 
-| Paramter | Description | Default value |
+| Parameter | Description | Default value |
 | -------- | -------- | -------- |
 |   startIndex   |   The 1-based index of the first search result.    | 1     |
 |   count   |   Non-negative Integer. Specifies the desired maximum number of search results per page.   | 10     |
-|   filter   |   String used for searching through the values of the attributes for the accounts. Attributes are: email, subjectDn of a X509 certificate, username, Id, and name.   | None.     |
+|   filter   |   String used to search for account attribute values. Attributes are: email, subjectDn of a X.509 certificate, username, Id, and name.   | None.     |
 |   sortBy   |   Determines what attribute to sort the results by. Attributes are: creation, email and name.   | name     |
 |   sortDirection   |   Determines the ordering strategy. Options are: asc and desc   | asc |
 
@@ -500,7 +500,7 @@ $ curl -s -H "Authorization: Bearer ${AT}" \
     ...
 ```
 
-The following example returns the 5 first users, who has one of the aformentioned filtering attributes containing "@iam" in a descing order according to the names (implicit sorting attribute is name)
+The following example returns the first 5 users who have one of the above filter attributes containing “@iam” in descending order by name (the implicit sorting attribute is name).
 
     search?filter=@iam&count=5&sortDirection=desc
 
@@ -575,7 +575,7 @@ The following example returns the 5 first users, who has one of the aformentione
 }
 ```
 
-The following example returns the users who have one of the aformentioned filtering attributes containing the value "CN=test2,O=IGI,C=IT":
+The following example returns the users who have one of the aforementioned filtering attributes containing the value "CN=test2,O=IGI,C=IT":
 
     search?filter=CN=test2,O=IGI,C=IT
 
@@ -613,7 +613,7 @@ The following example returns the users who have one of the aformentioned filter
 }
 ```
 
-[Scim-pagnation]: https://indigo-iam.github.io/v/v1.12.0/docs/reference/api/scim-api/#pagination
+[Scim-pagination]: https://indigo-iam.github.io/v/v1.12.0/docs/reference/api/scim-api/#pagination
 ### GET `/iam/group/search`
 
 Shows the list of IAM groups.
