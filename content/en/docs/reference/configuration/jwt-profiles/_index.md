@@ -147,17 +147,17 @@ In particular:
 
 All the mapping rules are described in the [White Paper for implementation mappings between SAML 2.0 and OpenID Connect in Research and Education](https://docs.google.com/document/d/1b-Mlet3Lq7qKLEf1BnHJ4nL1fq-vMe7fzpXyrq2wp08/edit).
 
-Moreover, the unique identifier `voperson_id` claim is available through this profile and follows the rules defined by the [AARC G026][aarc-g026] and the [voPerson v2.0][voPerson-v2.0] schema version.
+Moreover, the unique identifier `voPersonID` claim is available through this profile and follows the rules defined by the [AARC G026][aarc-g026] and the [voPerson v2.0][voPerson-v2.0] schema version.
 
-`voPerson_id` is the community unique identifier and it holds the same value as the accountID given by Indigo IAM.
+`voPersonID` is the community unique identifier and it holds the same value as the accountID given by INDIGO IAM.
 This claim is currently present within the following places (given the AARC profile is enabled):
 
-- ID token
+- ID Token
 - Access Token
-- Userinfo response
-- Introspection response
+- Userinfo Response
+- Introspection Response
 
-An example for the Access Token could be the following (produced via the Test client): 
+An example of an Access Token (produced via the Test client) is the following: 
 
 ```json
 {
