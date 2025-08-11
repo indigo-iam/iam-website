@@ -151,6 +151,10 @@ IAM_ACCESS_TOKEN_INCLUDE_SCOPE=false
 
 # Includes the nbf claim in issued access tokens
 IAM_ACCESS_TOKEN_INCLUDE_NBF=false
+
+# Configures how long before the token's issue time it becomes valid
+# The default value of 60 configures the token to be valid starting 60 seconds before it is issued
+IAM_ACCESS_TOKEN_NBF_OFFSET_SECONDS=60
 ```
 
 ## Database configuration
