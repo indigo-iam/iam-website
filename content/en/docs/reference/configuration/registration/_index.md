@@ -85,14 +85,14 @@ when it is required.**
 or OIDC Providers, respectively) to use for the mentioned account creation form field.
 
 
-## Automatic enrollment through SAML IdPs
+## Automatic enrollment through SAML/OIDC IdPs
 
-In case of registration through an external SAML Identity Provider, IAM offers
+In case of registration through an external SAML/OIDC Identity Provider, IAM offers
 a flexible user enrollment flow, also without IAM admin intervention. The default IAM
 behavior is that the user enrollment requires an administrator approval step.
 
 In order to enable the automatic enrollment flow via an external IdP, one
-should set the following properties, under the `saml` hierarchy:
+should set the following properties, under the `saml` or `oidc` hierarchy:
 
 ```yaml
 saml:
@@ -103,9 +103,18 @@ saml:
     trusted-idps: all
 ```
 
-In order to directly declare the list of trusted SAML IdPs, a comma separated list of
-entity IDs have to be set, e.g. `saml.jit-account-provisioning.trusted-idps=idp1,idp2,idp3`.
+```yaml
+oidc:
+  jit-account-provisioning:
+    enabled: true
+    # this will consider as trusted all the IdPs declared in your
+    # application-oidc.yml file
+    trusted-idps: all
+```
 
+In order to directly declare the list of trusted SAML/OIDC IdPs, a comma separated list of
+entity IDs have to be set, e.g. `saml.jit-account-provisioning.trusted-idps=idp1,idp2,idp3` or
+`oidc.jit-account-provisioning.trusted-idps=idp1,idp2,idp3`.
 
 ## User editable fields
 
