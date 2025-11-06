@@ -219,3 +219,30 @@ Example (decoded payload):
   "trust-anchor": "https://ta.example.org/"
 }
 ```
+
+## Configuration
+
+To enable OpenID Federation support, activate the `openid-federation` profile, for example `-Dspring.profiles.active=openid-federation`.
+
+The configuration expects the following properties:
+
+```yml
+openid-federation:
+  trust-anchors: ${IAM_OIDFED_TRUST_ANCHORS:https://ta.example.com}
+  entity-configuration:
+    expiration-seconds: ${IAM_OIDFED_ENTITY_CONFIGURATION_EXPIRATION_SECONDS:86400}
+    authority-hints: ${IAM_OIDFED_ENTITY_CONFIGURATION_AUTHORITY_HINTS:https://ia1.example.com,https://ia2.example.com}
+    federation-entity:
+      organization-name: ${IAM_OIDFED_FEDERATION_ENTITY_ORGANIZATION_NAME:}
+      contacts: ${IAM_OIDFED_FEDERATION_ENTITY_CONTACTS:}
+      logo-uri: ${IAM_OIDFED_FEDERATION_ENTITY_LOGO_URI:}
+```
+
+| Property | Description |
+|----------|-------------|
+| `trust-anchors` | URL of one or more trusted trust anchors; can be a comma-separated list |
+| `entity-configuration.expiration-seconds` | Validity duration (in seconds) of the generated Entity Configuration document |
+| `entity-configuration.authority-hints` |  One or more federation authorities that this entity trusts; can be a comma-separated list |
+| `federation-entity.organization-name` | Human-readable name of the organization operating this federation entity - OPTIONAL |
+| `federation-entity.contacts` | Contact info of administrators (e.g. email addresses); can be comma-separated - OPTIONAL |
+| `federation-entity.logo-uri` | URI of a logo representing the entity - OPTIONAL |
