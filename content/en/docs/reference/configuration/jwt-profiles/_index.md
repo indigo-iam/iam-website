@@ -149,7 +149,7 @@ All the mapping rules are described in the [White Paper for implementation mappi
 
 Moreover, the unique identifier `voPersonID` claim is available through this profile and follows the rules defined by the [AARC G026][aarc-g026] and the [voPerson v2.0][voPerson-v2.0] schema version.
 
-`voPersonID` is the community unique identifier and it holds the same value as the accountID given by INDIGO IAM.
+`voPersonID` is the community unique identifier and it holds a scoped version of the value accountID given by INDIGO IAM.
 This claim is currently present within the following places (given the AARC profile is enabled):
 
 - ID Token
@@ -162,16 +162,21 @@ An example of an Access Token (produced via the Test client) is the following:
 ```json
 {
   "sub": "73f16d93-2441-4a50-88ff-85360d78c6b5",
-  "voperson_id": "73f16d93-2441-4a50-88ff-85360d78c6b5",
-  "iss": "http://localhost:8080",
-  "exp": 1752744217,
-  "iat": 1752740617,
-  "jti": "b13a5593-2bfc-42c6-9216-9b0a280905a9",
+  "voperson_id": "73f16d93-2441-4a50-88ff-85360d78c6b5@indigo-dc",
+  "iss": "http://localhost:8080/",
+  "eduperson_assurance": [
+    "https://refeds.org/assurance",
+    "https://refeds.org/assurance/IAP/low"
+  ],
+  "exp": 1769090046,
+  "iat": 1769086446,
+  "jti": "64e746a2-71f1-4402-acc9-cf4631005590",
   "client_id": "client"
 }
 ```
 
-From the example, one can see that the value from the `sub` and the `voperson_id` claim is identical. 
+From the example, one can see that the value from the `voperson_id` claim is a scoped version of `sub`.<br>
+The scope is defined by the issuing authority, in this case `indigo-dc` being an identifier of the issuing system. 
 
 This profile is assigned to clients using the `aarc` scope.
 
