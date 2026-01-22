@@ -383,6 +383,11 @@ IAM_NOTIFICATION_ADMIN_ADDRESS=indigo-alerts@localhost
 # all IAM admins or to notify-address-and-admins to combine the two behaviors
 IAM_NOTIFICATION_ADMIN_NOTIFICATION_POLICY=notify-address
 
+# Should notifications be made when a profiles certificate information is updated?
+# When set to true, notifications are made when a certifcate is linked or unlinked 
+# from a profile. It follows the notifcation strategy of notification policy.
+IAM_NOTIFICATION_CERTIFICATE=false
+
 # Notification policy for group requests. Default value notifies both
 # admins and group managers. Set to notify-gms if you want to notify only group managers
 IAM_NOTIFICATION_GROUP_MANAGER_NOTIFICATION_POLICY=notify-gms-and-admins
