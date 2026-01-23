@@ -173,6 +173,37 @@ An example of an Access Token (produced via the Test client) is the following:
 
 From the example, one can see that the value from the `sub` and the `voperson_id` claim is identical. 
 
+#### AARC IdP hint
+Lastly, it should be mentioned that `aarc_idp_hint` has been implemented according to the [AARC-G061 guidelines](https://aarc-community.org/guidelines/aarc-g061/).
+
+To make use of the `aarc_idp_hint`, the following must be configured:
+
+- OIDC or SAML 
+- A client enabled with the proper redirect URI. 
+
+To make use of the example below, Google has been configured as an OIDC Identity Provider and the test client has been modified to have the redirect URI: *http://localhost:8080/*.<br>
+The access point is `/authorize`; authentication will be initiated according to the hint.
+
+    http://localhost:8080/authorize?response_type=code&client_id=client&scope=openid&redirect_uri=http://localhost:8080/&aarc_idp_hint=https%3A%2F%2Faccounts.google.com
+
+If we dissect the call we have the following:
+
+- `http://localhost:8080/authorize?` is the base of the call and the endpoint to which we can use the `aarc_idp_hint` parameter. 
+- `response_type=code` is specifying that it is the [Authorization Code Flow](https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow) that is desired.
+- `client_id=client` is the client who acts on behalf of the user. Hence, why it needs to have the proper redirect enabled and the correct scopes. 
+- `scope=openid` is the minimum requirement, as it signals an OpenID Connect authentication request.
+- `redirect_uri=http://localhost:8080/` is where the Authorization Server redirects the user after successful authentication.. 
+- `aarc_idp_hint=https%3A%2F%2Faccounts.google.com` is the AARC hint indicating which IdP is preferred for authentication. 
+
+Furthermore, the implementation follows specifically the rule set in the guidelines at point 3.3.13.b, that the IAM may disregard any nested hints, and in this implementation it always will.<br>
+
+From 3.3.13.d it states that if it were to handle the nested hints, then
+
+>the consumer MUST send this nested
+hint using a protocol understood by the next consumer.
+
+For this reason, nested hint handling has not implemented.
+
 This profile is assigned to clients using the `aarc` scope.
 
 [system-scopes]: {{< ref "docs/reference/configuration/system-scopes" >}}
