@@ -1,8 +1,8 @@
 ---
-title: Reset Client or Revoke Tokens
+title: Security Reset a Client or Revoke Tokens
 weight: 2
 ---
-Existing clients can have their tokens revoked or be reset by Administrator from dashboard.
+Existing clients can have their tokens revoked or be get a security reset by an Administrator from dashboard.
 
 ## Revoking a client's tokens using the dashboard
 
@@ -27,6 +27,10 @@ On success you will get a confirmation message and you will be redirected to the
 
 ![revoke tokens confirmation](../images/client-revoke-3.png)
 
+## Doing a Security-reset
+
+A security reset will revoke all the tokens issued to that client and rotate the client secret. 
+The intention of this is that given one knows the client has been compromised, then it is easily and quickly possible to reset all access for that given client. 
 
 Log into the service using admin credentials and click on the _Clients_ link on the left
 navigation bar:
@@ -37,7 +41,7 @@ From the _Clients_ link, select _Any client_ you want to disable, for example _T
 
 ![client list](../images/client-status-change-2.png)
 
-To reset the client click on _Reset Client_ button on the bottom of the page:
+To do a security reset of the client click on _Security Reset_ button on the bottom of the page:
 
 ![reset client button](../images/client-reset-1.png)
 
