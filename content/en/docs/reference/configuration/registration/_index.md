@@ -119,6 +119,8 @@ If no certificate is present whilst attempting the registration, then the follow
 
 ![registration certificate not present view](./registration-certificate-not-present.png)
 
+The error text can change if the certificate is present, but is linked to a suspended account or another account in general.
+
 Given that the certificate is present and valid, then the following registration page should be rendered.<br> 
 Please note the certificate information displayed at the bottom of the page. 
 
@@ -131,6 +133,8 @@ If the certificate field is `optional`, then the user may link a certificate upo
 The following is an example of this. Please take note of the checkbox at the end of the registration form.
 
 ![registration certificate optional view](./registration-certificate-optional.png)
+
+One will only be able to check the checkbox if the certificate is valid.
 
 If the certificate presented is within 1 month of expiration, then the following pop-up window is shown to the user.<br>
 The *almost expired* pop-up window is also enabled for the registration field being `mandatory`. 
