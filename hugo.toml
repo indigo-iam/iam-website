@@ -1,4 +1,4 @@
-baseURL = "/"
+baseURL = "/v/current/"
 title = "INDIGO IAM"
 
 enableRobotsTXT = true
