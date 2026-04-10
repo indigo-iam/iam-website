@@ -457,12 +457,12 @@ IAM_PRIVACY_POLICY_TEXT=Privacy policy
 
 ```bash 
 # A URL that directs users to the page where they can open a support ticket 
-# for this IAM instance. When left blank, no support link is displayed
-# in the login page.
+# for this IAM instance. When left blank (which is the default), no support
+# link is displayed in the login page
 IAM_SUPPORT_URL=
 
-# The text displayed in the login page for the support URL specified
-# above
+# The text displayed in the login page for the support URL specified above,
+# if enabled
 IAM_SUPPORT_TEXT=Support
 ```
 
