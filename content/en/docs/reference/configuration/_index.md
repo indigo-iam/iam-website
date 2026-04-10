@@ -417,9 +417,9 @@ section]({{< ref "/docs/reference/configuration/client-registration" >}}).
 # Specifies who can register a client. Default is anyone, so also not registered users.
 # Other possible values are: REGISTERED_USERS and ADMINISTRATORS
 IAM_CLIENT_REGISTRATION_ALLOW_FOR=ANYONE
-# Set to false if you do not want to enable client registration (default is true).
+# Set to false if you do not want to enable client registration (default is true)
 IAM_CLIENT_REGISTRATION_ENABLE=true
-# Set to true if you want only admin users to be able to create custom scopes (default is false).
+# Set to true if you want only admin users to be able to create custom scopes (default is false)
 IAM_CLIENT_ADMIN_ONLY_CUSTOM_SCOPES=false
 # Set the default validity in seconds of an AT requested by any newly registered client.
 # Default is 1 hour, but it can be changed per client
