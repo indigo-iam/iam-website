@@ -91,30 +91,51 @@ In case of registration through an external SAML/OIDC Identity Provider, IAM off
 a flexible user enrollment flow, also without IAM admin intervention. The default IAM
 behavior is that the user enrollment requires an administrator approval step.
 
+### SAML
+
 In order to enable the automatic enrollment flow via an external IdP, one
-should set the following properties, under the `saml` or `oidc` hierarchy:
+should set the following properties, under the `saml` hierarchy:
 
 ```yaml
 saml:
   jit-account-provisioning:
     enabled: true
-    # this will consider as trusted all the IdPs declared in your
-    # application-saml.yml file
+    # this default behavior considers all IdPs declared in your
+    # application-saml.yml file as trusted
     trusted-idps: all
 ```
+
+If one wants to select a subset of trusted SAML IdPs, a comma separated list of entity
+IDs have to be set, e.g.
+
+```yaml
+saml:
+  jit-account-provisioning:
+    trusted-idps: https://idp1.test.example,https://idp2.test.example,https://idp3.test.example
+```
+
+### OIDC
+
+In order to enable the automatic enrollment flow via an external OIDC Provider, one
+should set the following properties, under the `oidc` hierarchy:
 
 ```yaml
 oidc:
   jit-account-provisioning:
     enabled: true
-    # this will consider as trusted all the IdPs declared in your
-    # application-oidc.yml file
+    # this default behavior considers all IdPs declared in your
+    # application-oidc.yml file as trusted
     trusted-idps: all
 ```
 
-In order to directly declare the list of trusted SAML/OIDC IdPs, a comma separated list of
-entity IDs have to be set, e.g. `saml.jit-account-provisioning.trusted-idps=idp1,idp2,idp3` or
-`oidc.jit-account-provisioning.trusted-idps=idp1,idp2,idp3`.
+If one wants to select a subset of trusted OIDC Providers, a comma separated list of entity
+IDs have to be set, e.g.
+
+```yaml
+oidc:
+  jit-account-provisioning:
+    trusted-idps: https://google.test.example,https://facebook.test.example,https://github.test.example
+```
 
 ## User editable fields
 
