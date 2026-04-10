@@ -114,7 +114,10 @@ With this profile:
 
 - the `nbf` (not before) claim is not set in access tokens; this behaviour
   can be changed by setting the `IAM_ACCESS_TOKEN_INCLUDE_NBF=true`
-  environment variable.
+  environment variable. If the `nbf` claim is included, you can configure how long before 
+  the token's issue time it becomes valid by setting the environment variable
+  `IAM_ACCESS_TOKEN_NBF_OFFSET_SECONDS=60`. By default, this value is
+  60 seconds, meaning the token will be valid starting 60 seconds before it is issued.
 
 
 #### Requesting groups with the WLCG profile
