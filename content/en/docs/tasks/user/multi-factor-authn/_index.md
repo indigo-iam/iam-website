@@ -1,24 +1,10 @@
 ---
-title: "Multi-Factor Authentication (MFA)"
-linkTitle: "Multi-factor authentication"
+title: "Multi-Factor Authentication for users"
+linkTitle: "Multi-factor authentication for users"
 weight: 1
 ---
 
 To enhance account security and align with modern security standards, Multi-Factor Authentication (MFA) has been introduced in the INDIGO IAM service.
-
-MFA allows users to add an additional layer of security by registering a second authentication factor. Once enabled, a single credential will no longer suffice for login access.
-
-The primary goals of MFA are:
-
-* **Strengthening security**: Reducing the risk of unauthorized access, even if login credentials are compromised
-* **Compliance**: Meeting client security policies that mandate the use of multi-factor authentication
-
-To enable MFA, the `mfa` profile must be configured.
-
-{{% alert title="Info" color="info" %}}
-**MFA support is experimental**.
-It is applicable to login with username and password, login with SAML/OIDC external providers, login with X.509 certificates.
-{{% /alert %}}
 
 ## How to enable MFA
 
@@ -76,16 +62,7 @@ Users can disable MFA by following these steps:
     Enter the TOTP into the field provided and click _Submit_. If the code is correct, MFA will be successfully disabled.  
     From this point forward, the user will no longer need to provide a second authentication factor during login.
 
-## In case of problems with the authenticator
+## Problems with the authenticator app
 
-If users experience issues with their authenticator app, they can request IAM administrators to disable MFA on their behalf.
+If users experience issues with their authenticator app, they can request IAM administrators to disable MFA on their behalf and then setup again the TOTP.
 
-Administrators should go to the user’s homepage and click the _Disable MFA_ button.
-
-![Admin disables MFA for a user](Admin-disables-MFA.png)
-
-A confirmation dialogue will appear. Click _Ok_ to finalize the process.
-
-![Confirm MFA deactivation](Admin-confirmation.png)
-
-Once completed, MFA will be disabled for the user, allowing them to log in without the second authentication factor.
