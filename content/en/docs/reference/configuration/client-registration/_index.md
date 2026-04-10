@@ -4,8 +4,9 @@ linkTitle: "Client registration"
 weight: 7
 ---
 
-IAM has the ability to enable or disable the client registration, and
-to limit the registration to certain users.
+IAM has the ability to enable or disable the client registration,
+to limit the registration to certain users and to
+allow only admins to create custom scopes.
 The default behavior is that anyone can register a client, even
 anonymous users.
 
@@ -37,6 +38,18 @@ client-registration:
 ```
 
 The client registration is enabled for anyone by default.
+
+### Allow only Admins to create custom scopes
+
+In order to limit the ability to create custom scopes to 
+admin users only, please set this variable to true.
+
+```yaml
+client-registration:
+  admin-only-custom-scopes: false
+```
+
+The ability to select custom scopes for a client is enabled to everyone by default.
 
 
 ### Default settings of a new client
