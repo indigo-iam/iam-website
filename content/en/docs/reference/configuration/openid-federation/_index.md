@@ -42,6 +42,7 @@ An example here:
         "explicit"
       ],
       "federation_registration_endpoint": "http://iam.example.org/iam/api/oid-fed/client-registration",
+      "request_uri_parameter_supported": false,
       "scopes_supported": [
         "openid",
         "profile",
@@ -121,14 +122,16 @@ An example here:
       {
         "kty": "RSA",
         "e": "AQAB",
+        "use": "sign",
         "kid": "rsa1",
+        "alg": "RS256",
         "n": "4GRvJuFantVV3JdjwQOAkfREnwUFp2znRBTOIJhPamyH4gf4YlI5PQT79415NV4_HrWYzgooH5AK6-7WE-TLLGEAVK5vdk4vv79bG7ukvjvBPxAjEhQn6-Amln88iXtvicEGbh--3CKbQj1jryVU5aWM6jzweaabFSeCILVEd6ZT7ofXaAqan9eLzU5IEtTPy5MfrrOvWw5Q7D2yzMqc5LksmaQSw8XtmhA8gnENnIqjAMmPtRltf93wjtmiamgVENOVPdN-93Nd5w-pnMwEyoO6Q9JqXxV6lD6qBRxI7_5t4_vmVxcbbxcZbSAMoHqA2pbSMJ4Jcw-27Hct9jesLQ"
       }
     ]
   },
   "iss": "http://iam.example.org/",
   "authority_hints": [
-    "https://trust-anchor.sandbox.eosc.grnet.gr"
+    "https://ia.example.org"
   ],
   "exp": 1759591980,
   "iat": 1759505580
@@ -166,8 +169,8 @@ Example (decoded payload):
 
 ```json
 {
-  "iss": "https://rp.example.org/",
-  "sub": "https://rp.example.org/",
+  "iss": "https://rp.example.org",
+  "sub": "https://rp.example.org",
   "metadata": {
     "openid_relying_party": {
       "client_name": "Example RP",
@@ -191,19 +194,19 @@ Example (decoded payload):
   "iat": 1720000000,
   "exp": 1720003600,
   "aud": "https://iam.example.org/",
-  "authority_hints": ["https://ta.example.org/"]
+  "authority_hints": ["https://ta.example.org"]
 }
 ```
 
-If IAM successfully creates a registration for the RP, it returns a signed Entity Statement (JWT).
+If IAM successfully creates a client registration for the RP, it returns a signed Entity Statement (JWT).
 This Entity Statement represents the OP’s signed assertion about the RP and includes the RP’s metadata and trust information.
 
 Example (decoded payload):
 
 ```json
 {
-  "iss": "https://iam.example.org.org/",
-  "sub": "https://rp.example.org/",
+  "iss": "https://iam.example.org/",
+  "sub": "https://rp.example.org",
   "iat": 1720003700,
   "exp": 1720007300,
   "metadata": {
@@ -214,9 +217,9 @@ Example (decoded payload):
       "token_endpoint_auth_method": "client_secret_basic"
     }
   },
-  "authority_hints": ["https://ta.example/"],
-  "aud": "https://rp.example.org/",
-  "trust-anchor": "https://ta.example.org/"
+  "authority_hints": ["https://ta.example.org"],
+  "aud": "https://rp.example.org",
+  "trust-anchor": "https://ta.example.org"
 }
 ```
 
@@ -231,7 +234,7 @@ openid-federation:
   trust-anchors: ${IAM_OIDFED_TRUST_ANCHORS:https://ta.example.com}
   entity-configuration:
     expiration-seconds: ${IAM_OIDFED_ENTITY_CONFIGURATION_EXPIRATION_SECONDS:86400}
-    authority-hints: ${IAM_OIDFED_ENTITY_CONFIGURATION_AUTHORITY_HINTS:https://ia1.example.com,https://ia2.example.com}
+    authority-hints: ${IAM_OIDFED_ENTITY_CONFIGURATION_AUTHORITY_HINTS:https://ta.example.com,https://ia.example.com}
     federation-entity:
       organization-name: ${IAM_OIDFED_FEDERATION_ENTITY_ORGANIZATION_NAME:}
       contacts: ${IAM_OIDFED_FEDERATION_ENTITY_CONTACTS:}
