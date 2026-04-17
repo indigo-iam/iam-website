@@ -8,6 +8,7 @@ IAM implements the following endpoints:
 * ```/iam/account/{id}/attributes```, providing access to user attributes
 * ```/iam/account/{id}/authorities```, providing access to user authorities/roles
 * ```/iam/account/me/clients```, providing access to clients owned by the user
+* ```/iam/account/{id}/clients```, providing access to clients owned by a specific user
 * ```/iam/account/find/{option}```, searching users by username/label/e-mail/group/certificate subject/authority
 * ```/iam/account/{id}/groups/{groupId}```, providing access to user groups
 * ```/iam/account/{id}/managed-groups```, providing access to groups to which a user is manager
@@ -140,6 +141,54 @@ $ curl -s -H "Authorization: Bearer ${AT}" \
       ],
       "scope": "address phone openid profile offline_access read-tasks attr write-tasks email read:/ write:/",
       "created_at": 1658764288643
+    }
+  ]
+}
+```
+
+### GET `/iam/account/{id}/clients`
+
+ Let an admin to retrieve information about clients owned by a different user.
+
+```bash
+$ curl -s -H "Authorization: Bearer ${AT}" \
+  "http://localhost:8080/iam/account/167e359e-7833-4ce2-9f8b-f035cee39505/clients?count=1&startIndex=1" | jq
+{
+  "totalResults": 3,
+  "itemsPerPage": 1,
+  "startIndex": 1,
+  "Resources": [
+    {
+      "client_id": "client",
+      "client_name": "Test Client",
+      "redirect_uris": [
+        "https://iam.local.io/iam-test-client/openid_connect_login",
+        "http://localhost:9090/iam-test-client/openid_connect_login"
+      ],
+      "contacts": [
+        "admin@example.com"
+      ],
+      "grant_types": [
+        "authorization_code",
+        "urn:ietf:params:oauth:grant_type:redelegate",
+        "implicit",
+        "password",
+        "refresh_token"
+      ],
+      "token_endpoint_auth_method": "client_secret_basic",
+      "scope": "address openid profile scim:write write-tasks iam:admin.write read:/ phone offline_access read-tasks scim:read iam:admin.read attr email write:/",
+      "access_token_validity_seconds": 3600,
+      "refresh_token_validity_seconds": 86400,
+      "id_token_validity_seconds": 600,
+      "reuse_refresh_token": true,
+      "dynamically_registered": false,
+      "allow_introspection": true,
+      "clear_access_tokens_on_refresh": true,
+      "require_auth_time": false,
+      "created_at": 1776428339265,
+      "last_used": "1994-03-21",
+      "active": true,
+      "up_scoping_enabled": true
     }
   ]
 }
