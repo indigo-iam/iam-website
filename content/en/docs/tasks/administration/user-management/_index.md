@@ -57,7 +57,7 @@ After confimation the user will have monitoring privileges
 <img width="842" height="357" alt="image" src="https://github.com/user-attachments/assets/19daa481-42ec-4178-a6ce-a47ae2448e53" />
 
 
-This will allow the privileged user to be allowed to see all account 
+This will allow the privileged user to see all account 
 details (except secrets) without edit permission 
 
 <img width="1273" height="901" alt="image" src="https://github.com/user-attachments/assets/7a9478c8-c153-487d-8b89-e59a601e658d" />
