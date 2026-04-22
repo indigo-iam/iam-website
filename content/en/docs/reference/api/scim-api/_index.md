@@ -1272,6 +1272,33 @@ The following example shows how to add member to a group:
         ]
     }
 
+The following example shows how to replace a group with a new list of members:
+
+    PATCH http://localhost:8080/scim/Groups/4ca7fa98-0875-4eb3-a71f-0f88ce5632cf
+    {
+        "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+        ],
+        "operations": [
+            {
+                "op": "replace",
+                "path": "members",
+                "value": [
+                    {
+                        "display": "john_lennon",
+                        "value": "e9c8cfca-7158-4a0d-9684-4abdede617cd",
+                        "$ref": "http://localhost:8080/scim/Users/e9c8cfca-7158-4a0d-9684-4abdede617cd"
+                    }, 
+                    {
+                       "display": "paul_mccartney",
+                        "value": "73f16d93-2441-4a50-88ff-85360d78c6b5",
+                        "$ref": "http://localhost:8080/scim/Users/73f16d93-2441-4a50-88ff-85360d78c6b5"
+                    }
+                ]
+            }
+        ]
+    }
+
 ## DELETE `/scim/Groups/{id}`
 
 Requires `scim:write` scope.
