@@ -40,10 +40,28 @@ authentication and authorization.
 
 ## Managing user account privileges
 
+### Administrator privileges
 Administrator privileges can be assigned to a user from the user home page by
 clickin on the "Assign administrator privileges" button:
 
 ![Assign admin privileges](../images/assign-admin-privileges.png)
+
+### Monitoring privileges
+Monitoring privileges can be assigned to a user from the user home page by
+clickin on the "Assign monitoring privileges" button:
+
+<img width="1022" height="943" alt="image" src="https://github.com/user-attachments/assets/72b923a6-089e-4fc7-8b7a-f3e803977a7e" />
+
+After confimation the user will have monitoring privileges
+
+<img width="842" height="357" alt="image" src="https://github.com/user-attachments/assets/19daa481-42ec-4178-a6ce-a47ae2448e53" />
+
+
+This will allow the privileged user to see all account 
+details (except secrets) without edit permission 
+
+<img width="1273" height="901" alt="image" src="https://github.com/user-attachments/assets/7a9478c8-c153-487d-8b89-e59a601e658d" />
+
 
 ## Managing external user account identities
 
