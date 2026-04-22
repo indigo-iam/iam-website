@@ -9,6 +9,8 @@ IAM implements the following endpoints:
 * ```/iam/account/{id}/authorities```, providing access to user authorities/roles
 * ```/iam/account/me/clients```, providing access to clients owned by the user
 * ```/iam/account/find/{option}```, searching users by username/label/e-mail/group/certificate subject/authority
+* ```/iam/account/me/groups/```, retrieves information about groups associated with the currently authenticated user
+* ```/iam/account/{id}/groups/```, enable retrieval of groups associated with a specific user
 * ```/iam/account/{id}/groups/{groupId}```, providing access to user groups
 * ```/iam/account/{id}/managed-groups```, providing access to groups to which a user is manager
 * ```/iam/group/{groupId}/group-managers```, listing managers of a certain group
@@ -221,6 +223,84 @@ Examples of the available options:
     $ curl -H "Authorization: Bearer ${AT}" \
       http://localhost:8080/iam/account/find/notingroup/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1
     ```
+    
+## Group
+
+### GET `/iam/account/me/groups`
+
+Retrieves information about groups associated with the currently authenticated user.
+
+```bash
+$ curl -s -H "Authorization: Bearer ${AT}" http://localhost:8080/iam/account/me/groups | jq
+
+{
+  "totalResults": 2,
+  "itemsPerPage": 10,
+  "startIndex": 0,
+  "Resources": [
+    {
+      "id": 2,
+      "uuid": "6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1",
+      "name": "Analysis",
+      "description": "The analysis group",
+      "parentGroup": null,
+      "childrenGroups": [],
+      "labels": [],
+      "joiningDate": null,
+      "scopePoliciesDescription": []
+    },
+    {
+      "id": 1,
+      "uuid": "c617d586-54e6-411d-8e38-64967798fa8a",
+      "name": "Production",
+      "description": "The production group",
+      "parentGroup": null,
+      "childrenGroups": [],
+      "labels": [],
+      "joiningDate": null,
+      "scopePoliciesDescription": []
+    }
+  ]
+}
+```
+
+### GET `/iam/account/{id}/groups`
+
+Enable Admin to retrieve groups associated with a specific user.
+
+```bash
+$ curl -s -H "Authorization: Bearer ${AT}" http://localhost:8080/iam/account/167e359e-7833-4ce2-9f8b-f035cee39505/groups | jq
+
+{
+  "totalResults": 2,
+  "itemsPerPage": 10,
+  "startIndex": 0,
+  "Resources": [
+    {
+      "id": 2,
+      "uuid": "6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1",
+      "name": "Analysis",
+      "description": "The analysis group",
+      "parentGroup": null,
+      "childrenGroups": [],
+      "labels": [],
+      "joiningDate": null,
+      "scopePoliciesDescription": []
+    },
+    {
+      "id": 1,
+      "uuid": "c617d586-54e6-411d-8e38-64967798fa8a",
+      "name": "Production",
+      "description": "The production group",
+      "parentGroup": null,
+      "childrenGroups": [],
+      "labels": [],
+      "joiningDate": null,
+      "scopePoliciesDescription": []
+    }
+  ]
+}
+```
 
 ## Group members
 
