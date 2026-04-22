@@ -23,15 +23,9 @@ These are the tokens REST API endpoints:
 - [GET /iam/api/access-tokens/:id](#get-iamapiaccess-tokensid)
 - [GET /iam/api/refresh-tokens](#get-iamapirefresh-tokens)
 - [GET /iam/api/refresh-tokens/:id](#get-iamapirefresh-tokensid)
-- [DELETE /iam/api/access-tokens/:id](#delete-iamapiaccess-tokensid)
-- [DELETE /iam/api/refresh-tokens/:id](#delete-iamapirefresh-tokensid)
 
 **Deleting tokens**:
 
-- [GET /iam/api/access-tokens](#get-iamapiaccess-tokens)
-- [GET /iam/api/access-tokens/:id](#get-iamapiaccess-tokensid)
-- [GET /iam/api/refresh-tokens](#get-iamapirefresh-tokens)
-- [GET /iam/api/refresh-tokens/:id](#get-iamapirefresh-tokensid)
 - [DELETE /iam/api/access-tokens/:id](#delete-iamapiaccess-tokensid)
 - [DELETE /iam/api/refresh-tokens/:id](#delete-iamapirefresh-tokensid)
 
