@@ -24,6 +24,10 @@ notification:
   # - notify-admins: the notification arrives to  all IAM admins
   # - notify-address-and-admins: combine the two behaviors
   admin-notification-policy: notify-address
+  # When set to true, email notifications will be made, when a certificate is linked 
+  # or unlinked from a profile. The email strategy for this notification follows 
+  # the admin-notification-policy
+  certificateUpdate: false
   # Notification policy for group requests. Default value notifies both
   # admins and group managers. Set to notify-gms if you want to notify only group managers
   group-manager-notification-policy: notify-gms-and-admins
