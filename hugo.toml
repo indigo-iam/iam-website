@@ -201,4 +201,4 @@ url = "https://indigo-iam.github.io/v/v1.10.0"
 
 [[params.versions]]
 version = "older releases"
-url = "/docs/older-releases"
+url = "https://indigo-iam.github.io/v/current/docs/older-releases"
