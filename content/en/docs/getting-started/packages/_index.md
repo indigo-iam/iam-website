@@ -4,34 +4,35 @@ linkTitle: "Deployment with packages"
 weight: 5
 ---
 
-IAM can be deployed from packages on the CentOS 7 platform.
-Packages and repo files are hosted on the [INDIGO IAM package repository][iam-pkg-repo].
+IAM can be deployed from packages on the RHEL 8 and 9 platforms.
+Packages and repo files are hosted on the [INDIGO IAM package stable repository](https://repo.cloud.cnaf.infn.it/service/rest/repository/browse/indigo-iam-rpm-stable/).
 
 {{% alert title="Warning" color="warning" %}}
-We no longer maintain packages for the Ubuntu platform.
+We no longer maintain packages for the CENTOS 7 and Ubuntu platform.
 {{% /alert %}}
 
-## CENTOS 7
+## AlmaLinux 9
+
+<!-- Since IAM v1.14.0
 
 1. Install the INDIGO IAM release key:
 
   ```shell
-  $ sudo rpm --import https://indigo-iam.github.io/repo/gpgkeys/indigo-iam-release.pub.gpg
+  $ sudo rpm --import https://repo.cloud.cnaf.infn.it/repository/indigo-iam/CNAFSD.asc
   ```
+-->
 
-2. Install the repo files:
+1. Install the repo files:
 
   ```shell
-  $ sudo yum-config-manager --add-repo https://indigo-iam.github.io/repo/repofiles/rhel/indigoiam-stable-el7.repo
+  $ sudo yum-config-manager --add-repo https://indigo-iam.github.io/repo/repofiles/rhel/indigoiam-stable-el9.repo
   ```
 
-3. Install packages:
+2. Install packages:
 
   ```shell
-  $ sudo yum makecache
   $ sudo yum install -y iam-login-service
   ```
-
 
 ## IAM service configuration
 
