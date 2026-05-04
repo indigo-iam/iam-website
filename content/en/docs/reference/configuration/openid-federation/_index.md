@@ -231,21 +231,24 @@ The configuration expects the following properties:
 
 ```yml
 openid-federation:
+  # URL of one or more trusted trust anchors.
+  # It may also be a comma-separated list
   trust-anchors: ${IAM_OIDFED_TRUST_ANCHORS:https://ta.example.com}
   entity-configuration:
+    # Validity duration (in seconds) of the generated
+    # Entity Configuration document
     expiration-seconds: ${IAM_OIDFED_ENTITY_CONFIGURATION_EXPIRATION_SECONDS:86400}
+    # One or more federation authorities that this entity trusts.
+    # It may be a comma-separated list
     authority-hints: ${IAM_OIDFED_ENTITY_CONFIGURATION_AUTHORITY_HINTS:https://ta.example.com,https://ia.example.com}
     federation-entity:
+      # Human-readable name of the organization operating this
+      # federation entity. Filling this property is not mandatory
       organization-name: ${IAM_OIDFED_FEDERATION_ENTITY_ORGANIZATION_NAME:}
+      # Contact info of administrators (e.g. email addresses).
+      # It may also be comma-separated. Not mandatory
       contacts: ${IAM_OIDFED_FEDERATION_ENTITY_CONTACTS:}
+      # URI of a logo representing the entity. Not mandatory
       logo-uri: ${IAM_OIDFED_FEDERATION_ENTITY_LOGO_URI:}
 ```
 
-| Property | Description |
-|----------|-------------|
-| `trust-anchors` | URL of one or more trusted trust anchors; can be a comma-separated list |
-| `entity-configuration.expiration-seconds` | Validity duration (in seconds) of the generated Entity Configuration document |
-| `entity-configuration.authority-hints` |  One or more federation authorities that this entity trusts; can be a comma-separated list |
-| `federation-entity.organization-name` | Human-readable name of the organization operating this federation entity - OPTIONAL |
-| `federation-entity.contacts` | Contact info of administrators (e.g. email addresses); can be comma-separated - OPTIONAL |
-| `federation-entity.logo-uri` | URI of a logo representing the entity - OPTIONAL |
