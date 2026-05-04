@@ -184,3 +184,20 @@ Once the new IAM user has been created, the _Attributes_ view from the dashboard
 
 
 [custom-config-file]: {{< ref "/docs/reference/configuration/#overriding-default-configuration-templates" >}}
+
+
+## Configuring the registration button
+
+One can configure the visability of the registration button and its text via the following variables in the config file
+
+```yaml
+iam:
+  registration:
+    show-registration-button-in-login-page: true
+    registration-button-text: Apply for an account
+```
+The defualt configuration is defined as written above and can also be defined via the environment variables `IAM_REGISTRATION_SHOW_REGISTRATION_BUTTON_IN_LOGIN_PAGE` and `IAM_REGISTRATION_BUTTON_TEXT`.
+
+The aforementioned configuration of the registration button would result in it being rendered as seen below. 
+
+![registration button view](./registration-button.png)
