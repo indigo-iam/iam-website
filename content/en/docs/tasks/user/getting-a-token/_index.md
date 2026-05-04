@@ -12,7 +12,7 @@ A token can be obtained from a command-line interface (CLI) in two ways:
 In this section we recommend the installations of a set of tools that can help
 in managing tokens.
 
-## Obtaining a token using `oidc-agent`
+## `oidc-agent`
 
 [oidc-agent][oidc-agent] is a useful tool to easily get and manage access
 tokens for command-line applications.
@@ -164,7 +164,10 @@ Enter decryption password for account config 'wlcg':******
 	"audience":	""
 }
 ```
-## Obtaining a token with the password flow
+
+## Scripts
+
+### Obtaining a token with the password flow
 
 The [password flow][oauth-password-flow] allows a user to get a token from the
 IAM by using the IAM local credentials (i.e. the username/password credentials
@@ -197,7 +200,7 @@ limitations and should be preferred over the password flow.
 {{% /alert %}}
 
 
-## Obtaining a token with the device code flow
+### Obtaining a token with the device code flow
 
 The [device code flow][oauth-device-code-flow] allows a user to get a token
 from the IAM from a CLI interface while using an external browser for the
@@ -221,6 +224,27 @@ which does the following:
   authorization
 - prints code information on the terminal
 - waits for user input to proceed and obtain the token(s)
+
+### Set custom token expiration
+
+INDIGO IAM supports the `expires_in` request parameter for custom token expiration,
+which is applied when asking for an access token at the `/token` endpoint.
+The token expiration may only be set **SHORTER** than the lifetime configured for the
+Client (typically 3600 seconds) -- visible by Administrators. In case a longer
+lifetime is requested, IAM will shorten the token lifetime to the configured one.
+
+A typical token request with custom lifetime (here 10 seconds) in case of `client_credentials` flow
+is
+
+```bash
+$ curl -u client-cred:secret http://localhost:8080/token -d grant_type=client_credentials -d scope=read-tasks -d expires_in=10 -s | jq
+{
+  "access_token": "eyJraWQiOiJy...",
+  "token_type": "Bearer",
+  "expires_in": 9,
+  "scope": "read-tasks"
+}
+```
 
 [oauth-password-flow]: https://tools.ietf.org/html/rfc6749#section-4.3
 [oauth-device-code-flow]: https://tools.ietf.org/html/draft-ietf-oauth-device-flow-09
