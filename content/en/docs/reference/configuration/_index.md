@@ -454,6 +454,26 @@ IAM_PRIVACY_POLICY_URL=
 IAM_PRIVACY_POLICY_TEXT=Privacy policy
 ```
 
+## OpenID Federation
+
+```bash
+# URL of one or more trusted trust anchors. May be a comma-separated list
+IAM_OIDFED_TRUST_ANCHORS=https://ta.example.com
+# Validity duration (in seconds) of the generated Entity Configuration document
+IAM_OIDFED_ENTITY_CONFIGURATION_EXPIRATION_SECONDS=86400
+# One or more federation authorities that this entity trusts.
+# May be a comma-separated list
+IAM_OIDFED_ENTITY_CONFIGURATION_AUTHORITY_HINTS=https://ta.example.com,https://ia.example.com
+# Human-readable name of the organization operating this federation entity.
+# Filling this property is not mandatory
+IAM_OIDFED_FEDERATION_ENTITY_ORGANIZATION_NAME=
+# Contact info of administrators (e.g. email addresses).
+# May be comma-separated. Not mandatory
+IAM_OIDFED_FEDERATION_ENTITY_CONTACTS=
+# URI of a logo representing the entity. Not mandatory
+IAM_OIDFED_FEDERATION_ENTITY_LOGO_URI=
+```
+
 [spring-boot-conf-rules]: https://docs.spring.io/spring-boot/docs/1.3.8.RELEASE/reference/html/boot-features-external-config.html
 [redis]: https://redis.io/
 [wlcg-profile]: https://github.com/WLCG-AuthZ-WG/common-jwt-profile/blob/master/profile.md#token-validation
