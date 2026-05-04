@@ -664,7 +664,185 @@ Request params:
 }
 ```
 
-SCIM **Filtering** and **sorting** of results are currently not supported.
+
+Furthermore, filtering is supported with the operators equals (`eq`) and contains (`co`) for the following attributes: 
+
+- familyName
+- givenName
+- username
+- active
+- emails 
+
+Given the current implementation, only 1 filter is supported at a time and filters are also defined as a query parameter similarly to `count` and `attributes`.
+
+The following example, returns all users who are defined as being `active`
+
+    GET http://localhost:8080/scim/Users?filters=active%20eq%20true
+
+Request params:
+
+- `active eq true`
+
+
+```json
+{
+  "totalResults": 256,
+  "itemsPerPage": 100,
+  "startIndex": 1,
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+  ],
+  "Resources": [
+    {
+      "id": "73f16d93-2441-4a50-88ff-85360d78c6b5",
+      "meta": {
+        "created": "2026-01-21T15:30:36.508+01:00",
+        "lastModified": "2026-01-21T15:30:36.508+01:00",
+        "location": "http://localhost:8080/scim/Users/73f16d93-2441-4a50-88ff-85360d78c6b5",
+        "resourceType": "User"
+      },
+      "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:User",
+        "urn:indigo-dc:scim:schemas:IndigoUser"
+      ],
+      "userName": "admin",
+      "name": {
+        "familyName": "User",
+        "formatted": "Admin User",
+        "givenName": "Admin"
+      },
+      "displayName": "admin",
+      "active": true,
+      "emails": [
+        {
+          "type": "work",
+          "value": "1_admin@iam.test",
+          "primary": true
+        }
+      ],
+      "urn:indigo-dc:scim:schemas:IndigoUser": {
+        "oidcIds": [
+          {
+            "issuer": "https://accounts.google.com",
+            "subject": "114132403455520317223"
+          }
+        ],
+        "samlIds": [
+          {
+            "idpId": "https://idptestbed/idp/shibboleth",
+            "userId": "admin@example.org",
+            "attributeId": "urn:oid:1.3.6.1.4.1.5923.1.1.1.13"
+          }
+        ],
+        "serviceAccount": false,
+        "certificates": [
+          {
+            "primary": true,
+            "subjectDn": "CN=test2,O=IGI,C=IT",
+            "issuerDn": "CN=Test CA,O=IGI,C=IT",
+            "display": "test2 cert",
+            "created": "2026-01-21T15:30:37.533+01:00",
+            "lastModified": "2026-01-21T15:30:37.533+01:00",
+            "hasProxyCertificate": false
+          }
+        ]
+      }
+    },
+    ...]
+}
+```
+
+Multiple attributes are also supported when it comes to the filters:
+
+    GET http://localhost:8080/scim/Users?count=4&attributes=userName%2Cactive%2Cemails&filters=emails%20co%20@iam.test
+
+
+Request params:
+
+- `count=4`
+- `attributes=username,active, emails`
+- `filters=emails co @iam.test`
+
+```json
+{
+  "totalResults": 7,
+  "itemsPerPage": 4,
+  "startIndex": 1,
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+  ],
+  "Resources": [
+    {
+      "id": "73f16d93-2441-4a50-88ff-85360d78c6b5",
+      "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:User",
+        "urn:indigo-dc:scim:schemas:IndigoUser"
+      ],
+      "userName": "admin",
+      "active": true,
+      "emails": [
+        {
+          "type": "work",
+          "value": "1_admin@iam.test",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "id": "bffc67b7-47fe-410c-a6a0-cf00173a8fbb",
+      "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:User",
+        "urn:indigo-dc:scim:schemas:IndigoUser"
+      ],
+      "userName": "dup_email_0",
+      "active": true,
+      "emails": [
+        {
+          "type": "work",
+          "value": "3_admin@iam.test",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "id": "0a6fa72a-fb75-4a6c-9734-bfe673df70b3",
+      "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:User",
+        "urn:indigo-dc:scim:schemas:IndigoUser"
+      ],
+      "userName": "dup_email_1",
+      "active": true,
+      "emails": [
+        {
+          "type": "work",
+          "value": "4_duplicate@iam.test",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "id": "d836e5ec-246c-456c-8476-923ee2f831c8",
+      "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:User",
+        "urn:indigo-dc:scim:schemas:IndigoUser"
+      ],
+      "userName": "dup_email_2",
+      "active": true,
+      "emails": [
+        {
+          "type": "work",
+          "value": "5_duplicate@iam.test",
+          "primary": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+The SCIM filtering are in accordance with [rfc7644](https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2) for the aformentioned operators and attributes.
+
+SCIM **sorting** of results are currently not supported.
 
 ## PUT `/scim/Users/{id}`
 
