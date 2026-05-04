@@ -9,12 +9,12 @@ weight: 1
 A basic model has been implemented, without metadata policies and trust marks.
 {{% /alert %}}
 
-[OpenID Federation 1.0](https://openid.net/specs/openid-federation-1_0.html) defines a mechanism that allows an OpenID Provider (Authorization Server) and a Relying Party (client) with no pre-existing relationship to trust each other through **Trust Chains**. This enables an OpenID Provider to accept OAuth/OIDC requests from a Relying Party without requiring prior manual registration.
+[OpenID Federation 1.0](https://openid.net/specs/openid-federation-1_0.html) defines a mechanism that allows an OpenID Provider (OP, or in OAuth terms, _Authorization Server_) and a Relying Party (RP, or OAuth _Client_) with no pre-existing relationship to trust each other through **Trust Chains**. This enables an OP to accept OAuth/OIDC requests from a Relying Party without requiring prior manual registration.
 
-A **Trust Chain** is established by third-party authorities. The authority at the origin of the chain is the **Trust Anchor**, and any authorities between the Trust Anchor and the target entity (OpenID Provider or Relying Party) are **Intermediate Authorities**. These roles are conceptually similar to root and intermediate Certificate Authorities (CAs) in Public Key Infrastructure (PKI).
+A **Trust Chain** is established by third-party authorities. The authority at the origin of the chain is the **Trust Anchor**, and any authorities between the Trust Anchor and the target entity (OpenID Provider or Relying Party) are **Intermediate Authorities**. These roles are conceptually similar to root and intermediate Certificate Authorities (CAs) in the Public Key Infrastructure (PKI).
 
-A Relying Party trusts one or more Trust Anchors. If any of these Trust Anchors provides a valid path to the target OpenID Provider, the Relying Party can establish trust with that OpenID Provider.
-Conversely, an OpenID Provider also trusts one or more Trust Anchors. If any of these Trust Anchors provides a valid path to the target Relying Party, the OpenID Provider can establish trust with that Relying Party.
+A Relying Party trusts one or more Trust Anchors. If any of these Trust Anchors provides a valid path to the target OP, the Relying Party can establish trust with that OpenID Provider.
+Conversely, an OP also trusts one or more Trust Anchors. If any of these Trust Anchors provides a valid path to the target Relying Party, the OpenID Provider can establish trust with that Relying Party.
 
 Technically speaking, a Trust Chain is a sequence of JWTs that are issued by a leaf entity, zero or more Intermediate Authorities, and a Trust Anchor.
 
@@ -22,9 +22,9 @@ Technically speaking, a Trust Chain is a sequence of JWTs that are issued by a l
 
 In OpenID Federation, each participant (OpenID Provider, Relying Party or federation authority) is called *Entity*. Every Entity publishes a signed JSON document, called **Entity Configuration**, at a well-known URL (`/.well-known/openid-federation`). This document contains the Entity’s metadata (for example OIDC metadata, federation parameters) and its public keys for signature verification.
 
-An **Entity Statement** is the signed assertion that one Entity makes about another. It conveys metadata, policies and trust information along the trust chain. In practice, the Entity Configuration is a special type of Entity Statement that an Entity issues about itself (a “self-statement”). Intermediate authorities and Trust Anchors issue Entity Statements about subordinate Entities to build the trust chain.
+An **Entity Statement** is the signed assertion that an Entity makes about another. It conveys metadata, policies and trust information along the trust chain. In practice, the Entity Configuration is a special type of Entity Statement that an Entity issues about itself (a “self-statement”). Intermediate authorities and Trust Anchors issue Entity Statements about subordinate Entities to build the trust chain.
 
-This mechanism allows Relying Parties (RPs) and OpenID Providers (OPs) to automatically discover and validate each other’s metadata and establish trust without manual configuration.
+This mechanism allows RP and OP to automatically discover and validate each other’s metadata and establish trust without manual configuration.
 
 INDIGO IAM can act both as OP and RP (leaf entity), and publishes its Entity Configuration at `/.well-known/openid-federation` endpoint.
 An example here:
@@ -140,11 +140,11 @@ An example here:
 
 ## OpenID Client Registration
 
-OpenID Federation defines two methods for client registration that both rely on Trust Chains:
+OpenID Federation defines two methods for Client registration that both rely on Trust Chains:
 
-* **Explicit Registration** – the Relying Party (client) explicitly registers with the OpenID Provider (OP) by submitting its metadata through the OP’s federation registration endpoint. This allows the OP to verify the client’s trust chain and apply policies before issuing credentials.
+* **Explicit Registration** – the Relying Party explicitly registers with the OpenID Provider by submitting its metadata through the OP’s federation registration endpoint. This allows the OP to verify the Client’s trust chain and apply policies before issuing credentials.
 
-* **Automatic Registration** – the OP automatically onboards a Relying Party on the basis of its signed Entity Configuration and trust chain, without requiring a separate registration request.
+* **Automatic Registration** – the OpenID Provider automatically onboards a RP on the basis of its signed Entity Configuration and trust chain, without requiring a separate registration request.
 
 {{% alert title="Info" color="info" %}}
 In the current implementation, **Explicit Client Registration is based solely on the RP’s self-signed Entity Configuration**.  
@@ -154,7 +154,7 @@ Support for Explicit Client Registration with RP's Trust Chain and Automatic Cli
 ### Explicit registration
 
 In its OP role, INDIGO IAM exposes the `federation_registration_endpoint`, enabling the explicit registration flow as defined by the OpenID Federation 1.0 specification.  
-In this flow, a Relying Party (RP) actively submits its signed Entity Configuration to IAM, which validates the request and, if accepted, issues a new client registration.
+In this flow, a Relying Party (RP) actively submits its signed Entity Configuration to INDIGO IAM, which validates the request and, if accepted, issues a new Client registration.
 
 The federation registration endpoint is:
 
@@ -163,7 +163,7 @@ POST /iam/api/oid-fed/client-registration
 Content-Type: application/entity-statement+jwt
 ```
 
-The request body contains the RP’s signed Entity Configuration (a JWT).
+The request body contains the RP’s signed Entity Configuration (i.e. a JWT).
 
 Example (decoded payload):
 
@@ -198,7 +198,7 @@ Example (decoded payload):
 }
 ```
 
-If IAM successfully creates a client registration for the RP, it returns a signed Entity Statement (JWT).
+If IAM successfully creates a Client registration for the RP, it returns a signed Entity Statement (JWT).
 This Entity Statement represents the OP’s signed assertion about the RP and includes the RP’s metadata and trust information.
 
 Example (decoded payload):
