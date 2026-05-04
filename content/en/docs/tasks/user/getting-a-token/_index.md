@@ -3,11 +3,12 @@ title: Obtaining an IAM access token from a CLI
 weight: 1
 ---
 
-A token can be obtained from a command-line interface (CLI) in two ways:
+A token can be obtained from a command-line interface (CLI) in different ways:
 
 - using `oidc-agent`
-- using scripts linked to this page, using the resource-owner password
-  credentials flow or the OAuth device flow
+- using scripts linked to this page, with the resource-owner password
+  credentials flow (**deprecated**) or the device code flow
+- using `curl`.
 
 In this section we recommend the installations of a set of tools that can help
 in managing tokens.
@@ -20,15 +21,24 @@ tokens for command-line applications.
 ### Installing oidc-agent
 
 See [oidc-agent installation
-instructions](https://indigo-dc.gitbook.io/oidc-agent/installation/install).
+instructions](https://indigo-dc.github.io/oidc-agent/installation/install).
 
-#### Quick CENTOS7 installation instructions
+#### Quick Almalinux9 installation instructions
 
-This recipe shows how to quickly install `oidc-agent` on CENTOS 7.
+This recipe shows how to quickly install `oidc-agent` on Almalinux9.
+
+Install the `oidc-agent` repofile
 
 ```bash
-$ yum -y install epel-release
-$ yum -y install https://github.com/indigo-dc/oidc-agent/releases/download/v3.3.1/oidc-agent-3.3.1-1.el7.x86_64.rpm
+cd /etc/yum.repos.d
+wget https://repo.data.kit.edu//data-kit-edu-almalinux9.repo
+```
+
+refresh the cache and install oidc-agent with
+
+```bash
+dnf makecache
+dnf install oidc-agent
 ```
 
 ### Bootstrapping oidc-agent
@@ -169,6 +179,13 @@ Enter decryption password for account config 'wlcg':******
 
 ### Obtaining a token with the password flow
 
+{{% alert title="Warning" color="warning" %}}
+
+For security reasons, this grant type is __deprecated__ in OAuth2.1
+and it may no longer work in INDIGO IAM.
+
+{{% /alert %}}
+
 The [password flow][oauth-password-flow] allows a user to get a token from the
 IAM by using the IAM local credentials (i.e. the username/password credentials
 setup at IAM registration time).
@@ -183,21 +200,6 @@ In order to use the password flow, a non-privileged user has to:
 4. Use a script similar to the one given [here][get-token-script] (or write
    your own following the recommendations of the [RFC][oauth-password-flow]) to
    obtain a token out of the IAM
-
-{{% alert title="Warning" color="warning" %}}
-
-While this approach is viable, it is __deprecated__ since:
-
-- it forces the user to request the activation of the password flow for the
-  client (it is disabled by default for dynamically registered clients)
-- it forces the user to authenticate with the local IAM credentials (external
-  authentication mechanisms such as Google or SAML cannot be used)
-- it exposes the user credentials to the client application
-
-The device code flow, described in the next section, does not have these
-limitations and should be preferred over the password flow.
-
-{{% /alert %}}
 
 
 ### Obtaining a token with the device code flow
@@ -225,11 +227,33 @@ which does the following:
 - prints code information on the terminal
 - waits for user input to proceed and obtain the token(s)
 
+## CURL
+
+The aforementioned OAuth flows may also be directly performed with the `curl` command,
+which is exactly the way the scripts obtain a token.
+
+Here we show the `client_credentials` flow, specified in section 4.4 of the
+[RFC6749](https://datatracker.ietf.org/doc/html/rfc6749#section-4.4). It is tought for
+service accounts, i.e. for scripts able to secure credentials (NOT public clients)
+and which can be obtain a token with capabilities. The client credential flow does not
+require a user approval step since it is not bounded to any user nor any user attributes,
+such as groups. A typical client credential request could be
+
+```bash
+$ curl -u client-cred:secret http://localhost:8080/token -d grant_type=client_credentials -d scope=read-tasks -s | jq
+{
+  "access_token": "eyJraWQiOiJy...",
+  "token_type": "Bearer",
+  "expires_in": 3599,
+  "scope": "read-tasks"
+}
+```
+
 ### Set custom token expiration
 
 INDIGO IAM supports the `expires_in` request parameter for custom token expiration,
 which is applied when asking for an access token at the `/token` endpoint.
-The token expiration may only be set **SHORTER** than the lifetime configured for the
+The token expiration may only be set __shorter__ than the lifetime configured for the
 Client (typically 3600 seconds) -- visible by Administrators. In case a longer
 lifetime is requested, IAM will shorten the token lifetime to the configured one.
 
@@ -237,7 +261,7 @@ A typical token request with custom lifetime (here 10 seconds) in case of `clien
 is
 
 ```bash
-$ curl -u client-cred:secret http://localhost:8080/token -d grant_type=client_credentials -d scope=read-tasks -d expires_in=10 -s | jq
+$ curl -u client-cred:secret http://localhost:8080/token -d expires_in=10 -d grant_type=client_credentials -d scope=read-tasks -s | jq
 {
   "access_token": "eyJraWQiOiJy...",
   "token_type": "Bearer",
@@ -250,5 +274,5 @@ $ curl -u client-cred:secret http://localhost:8080/token -d grant_type=client_cr
 [oauth-device-code-flow]: https://tools.ietf.org/html/draft-ietf-oauth-device-flow-09
 [get-token-script]: https://gist.github.com/andreaceccanti/7d863db5ce3f43c74123a2cea8b8f9ff
 [dc-get-token-script]: https://gist.github.com/andreaceccanti/5b69323b89ce08321e7b5236de503600
-[oidc-agent]: https://github.com/indigo-dc/oidc-agent
+[oidc-agent]: https://indigo-dc.github.io/oidc-agent
 [client-registration-ref]: {{< ref "/docs/tasks/user/client-registration/" >}}
