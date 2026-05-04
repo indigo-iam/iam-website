@@ -112,7 +112,7 @@ github_project_repo = "https://github.com/indigo-iam/iam"
 
 # Uncomment this if you have a newer GitHub repo with "main" as the default branch,
 # or specify a new value if you want to reference another branch in your GitHub links
-github_branch= "v1.13.0"
+github_branch= "v1.14.0"
 
 # Google Custom Search Engine ID. Remove or comment out to disable search.
 # gcs_engine_id = "d72aa9b2712488cc3"
@@ -127,7 +127,7 @@ offlineSearch = true
 prism_syntax_highlighting = false
 
 # VOMS aa version 
-voms_aa_version = "v1.13.0"
+voms_aa_version = "v1.14.0"
 
 # User interface configuration
 [params.ui]
@@ -170,6 +170,10 @@ enable = false
 	url = "https://indigo-iam.slack.com"
 	icon = "fab fa-slack"
         desc = "Chat with other project developers"
+
+[[params.versions]]
+version = "v1.14.0"
+url = "https://indigo-iam.github.io/v/v1.14.0"
 
 [[params.versions]]
 version = "v1.13.0"
