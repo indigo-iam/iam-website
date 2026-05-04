@@ -24,6 +24,7 @@ Currently the following profiles are defined:
 | registration   | yes                 | Enables user registration and reset password functionalities                       |
 | wlcg-scopes    | no                  | Enables WLCG token encoding                                                        |
 | mfa            | no                  | Enables Multi-Factor Authentication (MFA) settings                                 |
+| openid-federation | no                 | Allows IAM to act as an OpenID Provider and Relying Party in the OpenID Federation model                         |
 
 Profiles are enabled by setting the `spring.profiles.active` Java system
 property when starting the IAM service. This can be done, using the official
