@@ -24,6 +24,7 @@ Currently the following profiles are defined:
 | registration   | yes                 | Enables user registration and reset password functionalities                       |
 | wlcg-scopes    | no                  | Enables WLCG token encoding                                                        |
 | mfa            | no                  | Enables Multi-Factor Authentication (MFA) settings                                 |
+| openid-federation | no                 | Allows IAM to act as an OpenID Provider and Relying Party in the OpenID Federation model                         |
 
 Profiles are enabled by setting the `spring.profiles.active` Java system
 property when starting the IAM service. This can be done, using the official
@@ -475,6 +476,26 @@ IAM_SUPPORT_URL=
 # The text displayed in the login page for the support URL specified above,
 # if enabled
 IAM_SUPPORT_TEXT=Support
+```
+
+## OpenID Federation
+
+```bash
+# URL of one or more trusted trust anchors. May be a comma-separated list
+IAM_OIDFED_TRUST_ANCHORS=https://ta.example.com
+# Validity duration (in seconds) of the generated Entity Configuration document
+IAM_OIDFED_ENTITY_CONFIGURATION_EXPIRATION_SECONDS=86400
+# One or more federation authorities that this entity trusts.
+# May be a comma-separated list
+IAM_OIDFED_ENTITY_CONFIGURATION_AUTHORITY_HINTS=https://ta.example.com,https://ia.example.com
+# Human-readable name of the organization operating this federation entity.
+# Filling this property is not mandatory
+IAM_OIDFED_FEDERATION_ENTITY_ORGANIZATION_NAME=
+# Contact info of administrators (e.g. email addresses).
+# May be comma-separated. Not mandatory
+IAM_OIDFED_FEDERATION_ENTITY_CONTACTS=
+# URI of a logo representing the entity. Not mandatory
+IAM_OIDFED_FEDERATION_ENTITY_LOGO_URI=
 ```
 
 [spring-boot-conf-rules]: https://docs.spring.io/spring-boot/docs/1.3.8.RELEASE/reference/html/boot-features-external-config.html
