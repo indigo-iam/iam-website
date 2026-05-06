@@ -81,6 +81,27 @@ In order to request a token exchange, a client must be configured with the
 exchange grant type is **disabled** by default for dynamically registered
 clients, and can be enabled only by users with administrative privileges.
 
+Furthermore, one can restrict the token exchange actor such that upscoping isn't enabled. 
+Here, the definition of upscoping being that one requests for additional scopes that is not present in the original token.
+However, to clarify, both actor and subject must have the requested scopes enabled. <br>
+**In this context the disabling of upscoping restricts the actor to only request scopes present in the token, but the
+scopes requested must be enabled for both subject and actor. For any token exchange, the scopes requested must be present
+on subject- and actor client.**
+
+**It's important to note that the disabling of upscoping enforces all the requested scopes to be present in the 
+access token, except for the `offline_access` scope. The disabling of upscoping does not restrict this scope from
+being upscoped (though the `offline_access` scope would still have to be enabled for both subject and actor client).**
+
+Per default upscoping is enabled, but given administrator privileges one can disable upscoping for a client.<br>
+This can be done in the scope segment, when configuring the client as seen below:
+
+![upscoping view](upscoping.png)
+
+Lastly, it should be mentioned that the default behaviour is to extract the scopes from the access token.
+If no scopes are present in the access token (which is a possibility given the versatility of the configuration
+of access tokens within Indigo IAM), then token introspection will be used to retrieve the scopes of the token and 
+a warning will be produced, signaling this.
+
 ## The token exchange request
 
 A client who wants to exchange an access token with a new one (or a couple of
@@ -102,7 +123,8 @@ special way. These scopes, in order to be "exchanged" across clients, need to
 be 
 
 - enabled for the client requesting the token exchange
-- linked to the subject token presented for the token exchange
+- enabled for the client who is the subject of the token exchange
+- linked to the subject token presented for the token exchange (only if the client requesting does not have upscoping enabled)
 
 The list of system scopes currently defined in the IAM can be obtained by
 registered users by issuing a request to the IAM system scopes API: 
@@ -213,6 +235,33 @@ https://task-app.example.org/api on behalf of user `test`:
 ```
 $ curl -H "Authorization: Bearer eyJra..." http://tasks.example.org/api
 
+```
+
+### Upscoping during Token Exchange example
+Below is presented a guide on how to do upscoping using the default clients 
+enabled in Indigo IAM.<br> 
+
+```bash
+## The goal
+
+# To perform a token exchange with a subject to provide initial token with scope X
+# and an actor to use said token to get a new token with scope Y using upscoping
+
+## Setting the variables
+
+export IAM_TOKEN_ENDPOINT=localhost:8080/token
+
+## Getting the access token
+
+curl $IAM_TOKEN_ENDPOINT -d grant_type=client_credentials -d client_id=token-exchange-subject -d client_secret=secret -d scope=openid
+
+## Setting the access token just received
+
+export ACCESS_TOKEN=...whatever you just received
+
+
+## Doing the token exchange
+curl $IAM_TOKEN_ENDPOINT -u token-exchange-actor:secret -d subject_token=$ACCESS_TOKEN -d grant_type=urn:ietf:params:oauth:grant-type:token-exchange -d scope="profile" -d subject_token_type=urn:ietf:params:oauth:token-type:access_token
 ```
 
 ### Trust 
