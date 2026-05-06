@@ -62,18 +62,31 @@ To enable filling the creation form with values provided by the IdP, you need to
 iam:
   registration:
     fields:
-      email:
-        read-only: false
-        external-auth-attribute: email
       name:
         read-only: false
+        field-behaviour: mandatory
         external-auth-attribute: given_name
       surname:
         read-only: false
+        field-behaviour: mandatory
         external-auth-attribute: family_name
+      email:
+        read-only: false
+        field-behaviour: mandatory
+        external-auth-attribute: email
       username:
         read-only: false
-        external-auth-attribute: preferred_username
+        field-behaviour: mandatory
+        external-auth-attribute: suggested_username
+      affiliation:
+        read-only: false
+        field-behaviour: optional
+      notes:
+        read-only: false
+        field-behaviour: mandatory
+      certificate:
+        read-only: false
+        field-behaviour: hidden
 ```
 
 `read-only` can be set to `true` if you want to prevent that the  value provided supplied by the ID is modified by the user.
@@ -84,6 +97,58 @@ when it is required.**
 `external-auth-attribue` must be the name of the IdP attribute, or token claim (when provided by SAML IdPs,
 or OIDC Providers, respectively) to use for the mentioned account creation form field.
 
+## Allowing for certificate linking upon registration
+
+Within the registration fields, is the field `certificate`. While it may be within the same group as the other fields, its 
+behaviour is a bit different from the others. Firstly, it does inherit the same attributes being `read-only`, `field-behaviour` and
+`external-auth-attribute`, but only `field-behaviour` is to be configured for this field. 
+
+Configuring `read-only` or `external-auth-attribute` would be to assume that the IdP provides information of whether the certificate of the user should be linked or not.
+Therefore, it's strongly discouraged to configure `read-only` to anything but `false`, given that, as previously mentioned, this could lead to the user
+not being able to register, as this information is not provided by the IdP (and Indigo IAM has currently not been configured to handle this,
+even if provided).
+
+The `field-behaviour` can be defined as `mandatory`, `optional`, or `hidden`. 
+Each of the options brings different behaviour to the registration page. 
+
+**In general for linking the certificate upon registration, a certificate needs to be present in the browser. Make sure to have linked one before attempting the registration.**
+
+### Certificate field being `mandatory`
+If the certificate field is `mandatory`, then the user must link a certificate upon registration.<br>
+If no certificate is present whilst attempting the registration, then the following error will appear. 
+
+![registration certificate not present view](./registration-certificate-not-present.png)
+
+The error text can change if the certificate is present, but is linked to a suspended account or another account in general.
+
+Given that the certificate is present and valid, then the following registration page should be rendered.<br> 
+Please note the certificate information displayed at the bottom of the page. 
+
+![registration certificate mandatory view](./registration-certificate-mandatory.png)
+
+### Certificate field being `optional` 
+
+If the certificate field is `optional`, then the user may link a certificate upon registration if one is present and valid. 
+
+The following is an example of this. Please take note of the checkbox at the end of the registration form.
+
+![registration certificate optional view](./registration-certificate-optional.png)
+
+One will only be able to check the checkbox if the certificate is valid.
+
+If the certificate presented is within 1 month of expiration, then the following pop-up window is shown to the user.<br>
+The *almost expired* pop-up window is also enabled for the registration field being `mandatory`. 
+
+![registration certificate almost expired view](./registration-certificate-almost-expired.png)
+
+### Certificate field being `hidden`
+If the certificate field is `hidden`, then the user does not have the option to link their certificate upon the registration request
+(nor does one have to be present upon registration). <br>
+
+The checkbox is hidden from the user and no certificate is required. <br>
+Please note the absence of certificate information at the bottom of the page.
+
+![registration certificate hidden view](./registration-certificate-hidden.png)
 
 ## Automatic enrollment through SAML/OIDC IdPs
 
