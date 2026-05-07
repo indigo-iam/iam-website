@@ -268,3 +268,5 @@ The defualt configuration is defined as written above and can also be defined vi
 The aforementioned configuration of the registration button would result in it being rendered as seen below. 
 
 ![registration button view](./registration-button.png)
+
+[custom-config-file]: {{< ref "/docs/reference/configuration/#overriding-default-configuration-templates" >}}
