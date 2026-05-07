@@ -52,7 +52,9 @@ directory, which depends on how you deployed IAM:
 default configuration **only if you know what you are doing**, and for those
 scenarios not served by the default templates. 
 
-## Basic service configuration 
+## IAM login service
+
+### Basic service configuration 
 
 ```bash
 # The IAM service will list for requests on this host
@@ -116,7 +118,7 @@ IAM_LOCAL_RESOURCES_LOCATION=file:/indigo-iam/local-resources
 ```
 (*) More information [here][wlcg-profile].
 
-## Organization configuration
+### Organization configuration
 
 ```bash
 # The name of the organization managed by this IAM instance
@@ -139,26 +141,7 @@ IAM_LOGO_WIDTH=200
 IAM_TOPBAR_TITLE="INDIGO IAM for ${IAM_ORGANISATION_NAME}"
 ```
 
-## Access token contents configuration 
-
-```bash
-## Token content settings 
-
-# Include authentication claims in issued access tokens
-IAM_ACCESS_TOKEN_INCLUDE_AUTHN_INFO=false
-
-# Includes the scope in issued access tokens
-IAM_ACCESS_TOKEN_INCLUDE_SCOPE=false
-
-# Includes the nbf claim in issued access tokens
-IAM_ACCESS_TOKEN_INCLUDE_NBF=false
-
-# Configures how long before the token's issue time it becomes valid
-# The default value of 60 configures the token to be valid starting 60 seconds before it is issued
-IAM_ACCESS_TOKEN_NBF_OFFSET_SECONDS=60
-```
-
-## Database configuration
+### Database configuration
 
 ```bash
 # The host where the MariaDB/MySQL daemon is running
@@ -204,70 +187,37 @@ IAM_DB_TIME_BETWEEN_EVICTION_RUNS_MILLIS=5000
 IAM_DB_MIN_EVICTABLE_IDLE_TIME_MILLIS=60000
 ```
 
-## Test Client configuration
+### Access token contents configuration 
 
 ```bash
-# Public identifier for client application
-IAM_CLIENT_ID=client
+## Token content settings 
 
-# Client application's own password
-IAM_CLIENT_SECRET=secret
+# Include authentication claims in issued access tokens
+IAM_ACCESS_TOKEN_INCLUDE_AUTHN_INFO=false
 
-# Default scopes allowed to the client application (optional)
-IAM_CLIENT_SCOPES=openid profile email
+# Includes the scope in issued access tokens
+IAM_ACCESS_TOKEN_INCLUDE_SCOPE=false
 
-# Use forwarded headers from reverse proxy. Set this to native when deploying the
-# service behind a reverse proxy
-IAM_CLIENT_FORWARD_HEADERS_STRATEGY=none
+# Includes the nbf claim in issued access tokens
+IAM_ACCESS_TOKEN_INCLUDE_NBF=false
+
+# Configures how long before the token's issue time it becomes valid
+# The default value of 60 configures the token to be valid starting 60 seconds before it is issued
+IAM_ACCESS_TOKEN_NBF_OFFSET_SECONDS=60
 ```
 
-## Redis configuration
-
-IAM supports storing HTTP session information and its in-memory cache
-(for the well-known endpoint and scope matchers) in an external [redis][redis] server.
-
-This can be useful when [deploying multiple replicas of the IAM
-service](../../../docs/tasks/deployment/ha).
+### Persisting access tokens
 
 ```bash
-## Redis server settings
-
-# Redis server hostname
-IAM_SPRING_REDIS_HOST=localhost
-
-# Redis server port
-IAM_SPRING_REDIS_PORT=6397
-
-# Redis server password.
-# Leave it empty in case the server does not require any password
-IAM_SPRING_REDIS_PASSWORD=secret
-
-## Session settings
-
-# Duration of an HTTP session
-IAM_SESSION_TIMEOUT_SECS=1800
-
-# Set to 'redis' in order to handle HTTP session
-# with an external Redis service
-IAM_SPRING_SESSION_STORE_TYPE=none
-
-# If set to 'true' the status of the Redis service
-# will appear in the IAM Health check endpoint
-IAM_HEALTH_REDIS_PROBE_ENABLED=false
-
-## Cache settings
-
-# Enable the caching mechanism in IAM.
-# When set to 'false', no-one kind of cache will be used.
-# The default behavior is an in-memory cache
-IAM_CACHE_ENABLED=true
-
-# Allow to cache the IAM information (i.e. well-known endpoint and
-# scope matchers) into an external Redis service
-IAM_CACHE_REDIS_ENABLED=false
+# Set to 'true' if you want to store access tokens on the database
+# (default behaviour). In this case, the token validation is performed
+# by checking if the token is saved in the database.
+# If set to 'false', the access tokens are not stored on the database,
+# and the token validation is performed "offline"
+IAM_ACCESS_TOKEN_STORE_ON_DATABASE=true
 ```
 
-## Local authentication settings
+### Local authentication settings
 
 It allows a user to log in with local credentials (username/password).  
 For more information, see the [Local Authentication section][local-authn].
@@ -280,7 +230,7 @@ IAM_LOCAL_AUTHN_LOGIN_PAGE_VISIBILITY=visible
 IAM_LOCAL_AUTHN_ENABLED_FOR=all
 ```
 
-## Google authentication settings
+### Google authentication settings
 
 ```bash
 # The Google OAuth client id
@@ -293,7 +243,7 @@ IAM_GOOGLE_CLIENT_SECRET=
 For more information and examples, see the [OpenID Connect
 Authentication section]({{< ref "/docs/reference/configuration/external-authentication/oidc" >}}).
 
-## SAML authentication settings
+### SAML authentication settings
 
 ```bash
 # The SAML entity ID for this IAM instance
@@ -352,7 +302,7 @@ IAM_SAML_ID_RESOLVERS=eduPersonUniqueId,eduPersonTargetedId,eduPersonPrincipalNa
 For more information and examples, see the [SAML Authentication
 section]({{< ref "/docs/reference/configuration/external-authentication/saml" >}}).
 
-## Notification service settings
+### Notification service settings
 
 ```bash
 ## SMTP mail server settings 
@@ -407,7 +357,7 @@ IAM_NOTIFICATION_CLEANUP_AGE=30
 
 For more customization of the notification service settings, see the [IAM Notifications section]({{< ref "/docs/reference/configuration/notifications" >}}).
 
-## Account linking settings
+### Account linking settings
 
 ```bash
 # Should account linking be disabled? When set to true users cannot
@@ -415,7 +365,7 @@ For more customization of the notification service settings, see the [IAM Notifi
 IAM_ACCOUNT_LINKING_DISABLE=false 
 ```
 
-## Client registration
+### Client registration
 
 Those variables allow to configure how to register a new client and
 the related default settings.
@@ -445,7 +395,7 @@ IAM_DEFAULT_ID_TOKEN_VALIDITY_SECONDS=600
 IAM_DEFAULT_REFRESH_TOKEN_VALIDITY_SECONDS=2592000
 ```
 
-## Client lifecycle
+### Client lifecycle
 
 ```bash
 # Record the last date when each client was used to create or refresh a token
@@ -453,7 +403,7 @@ IAM_DEFAULT_REFRESH_TOKEN_VALIDITY_SECONDS=2592000
 IAM_CLIENT_TRACK_LAST_USED=false
 ```
 
-## Privacy policy settings
+### Privacy policy settings
 
 ```bash
 # An URL pointing to a privacy policy document which applies
@@ -465,7 +415,7 @@ IAM_PRIVACY_POLICY_URL=
 # above
 IAM_PRIVACY_POLICY_TEXT=Privacy policy
 ```
-## Support Button Settings 
+### Support Button Settings 
 
 ```bash 
 # A URL that directs users to the page where they can open a support ticket 
@@ -478,7 +428,7 @@ IAM_SUPPORT_URL=
 IAM_SUPPORT_TEXT=Support
 ```
 
-## OpenID Federation
+### OpenID Federation
 
 ```bash
 # URL of one or more trusted trust anchors. May be a comma-separated list
@@ -496,6 +446,69 @@ IAM_OIDFED_FEDERATION_ENTITY_ORGANIZATION_NAME=
 IAM_OIDFED_FEDERATION_ENTITY_CONTACTS=
 # URI of a logo representing the entity. Not mandatory
 IAM_OIDFED_FEDERATION_ENTITY_LOGO_URI=
+```
+
+### Redis configuration
+
+IAM supports storing HTTP session information and its in-memory cache
+(for the well-known endpoint and scope matchers) in an external [redis][redis] server.
+
+This can be useful when [deploying multiple replicas of the IAM
+service](../../../docs/tasks/deployment/ha).
+
+```bash
+## Redis server settings
+
+# Redis server hostname
+IAM_SPRING_REDIS_HOST=localhost
+
+# Redis server port
+IAM_SPRING_REDIS_PORT=6397
+
+# Redis server password.
+# Leave it empty in case the server does not require any password
+IAM_SPRING_REDIS_PASSWORD=secret
+
+## Session settings
+
+# Duration of an HTTP session
+IAM_SESSION_TIMEOUT_SECS=1800
+
+# Set to 'redis' in order to handle HTTP session
+# with an external Redis service
+IAM_SPRING_SESSION_STORE_TYPE=none
+
+# If set to 'true' the status of the Redis service
+# will appear in the IAM Health check endpoint
+IAM_HEALTH_REDIS_PROBE_ENABLED=false
+
+## Cache settings
+
+# Enable the caching mechanism in IAM.
+# When set to 'false', no-one kind of cache will be used.
+# The default behavior is an in-memory cache
+IAM_CACHE_ENABLED=true
+
+# Allow to cache the IAM information (i.e. well-known endpoint and
+# scope matchers) into an external Redis service
+IAM_CACHE_REDIS_ENABLED=false
+```
+
+## Test Client configuration
+
+```bash
+# Public identifier for client application
+IAM_CLIENT_ID=client
+
+# Client application's own password
+IAM_CLIENT_SECRET=secret
+
+# Default scopes allowed to the client application (optional)
+IAM_CLIENT_SCOPES=openid profile email
+
+# Use forwarded headers from reverse proxy. Set this to native when deploying the
+# service behind a reverse proxy
+IAM_CLIENT_FORWARD_HEADERS_STRATEGY=none
 ```
 
 [spring-boot-conf-rules]: https://docs.spring.io/spring-boot/docs/1.3.8.RELEASE/reference/html/boot-features-external-config.html
