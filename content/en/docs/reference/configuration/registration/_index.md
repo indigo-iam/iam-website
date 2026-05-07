@@ -215,30 +215,6 @@ oidc:
     trusted-idps: https://google.test.example,https://facebook.test.example,https://github.test.example
 ```
 
-## User editable fields
-
-Starting with version 1.6.0, IAM allows to limit which fields of the user profile are editable by users.
-
-The default, backward-compatible settings that allow users to edit all their
-profile fields are defined as follows:
-
-```yaml
-iam:
-  user-profile:
-    editable-fields:
-      - email
-      - name
-      - picture
-      - surname
-```
-
-To prevent modifications to any of the fields remove the field name from
-`editable-fields` list.
-
-External configuration can be managed by placing directives as shown above in a
-[custom configuration
-file][custom-config-file].
-
 
 ## Automatically set the nickname as attribute
 
@@ -277,5 +253,3 @@ The defualt configuration is defined as written above and can also be defined vi
 The aforementioned configuration of the registration button would result in it being rendered as seen below. 
 
 ![registration button view](./registration-button.png)
-
-[custom-config-file]: {{< ref "/docs/reference/configuration/#overriding-default-configuration-templates" >}}
