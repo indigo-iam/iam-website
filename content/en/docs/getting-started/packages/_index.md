@@ -5,33 +5,55 @@ weight: 5
 ---
 
 IAM can be deployed from packages on the RHEL 8 and 9 platforms.
-Packages and repo files are hosted on the [INDIGO IAM package stable repository](https://repo.cloud.cnaf.infn.it/service/rest/repository/browse/indigo-iam-rpm-stable/).
+The RPMs are hosted on the [INDIGO IAM package stable repository](https://repo.cloud.cnaf.infn.it/service/rest/repository/browse/indigo-iam-rpm-stable/).
 
 {{% alert title="Warning" color="warning" %}}
 We no longer maintain packages for the CENTOS 7 and Ubuntu platform.
 {{% /alert %}}
 
-## AlmaLinux 9
+## Installation
 
-<!-- Since IAM v1.14.0
+Since INDIGO IAM v1.14.0 we release signed RPMs.
 
 1. Install the INDIGO IAM release key:
 
   ```shell
-  $ sudo rpm --import https://repo.cloud.cnaf.infn.it/repository/indigo-iam/CNAFSD.asc
-  ```
--->
-
-1. Install the repo files:
-
-  ```shell
-  $ sudo yum-config-manager --add-repo https://indigo-iam.github.io/repo/repofiles/rhel/indigoiam-stable-el9.repo
+  sudo rpm --import https://repo.cloud.cnaf.infn.it/repository/indigo-iam/CNAFSD.asc
   ```
 
-2. Install packages:
+### On AlmaLinux 8
+
+2. Install the repo file:
 
   ```shell
-  $ sudo yum install -y iam-login-service
+  sudo curl -L \
+    -o /etc/yum.repos.d/indigoiam-stable-el8.repo \
+    https://indigo-iam.github.io/repo/repofiles/rhel/indigoiam-stable-el8.repo
+  ```
+
+3. Clear the package manager cache and install `iam-login-service` with:
+
+  ```shell
+  sudo dnf makecache
+  sudo dnf install -y iam-login-service
+  ```
+
+### On AlmaLinux 9
+
+
+2. Install the repo file:
+
+  ```shell
+  sudo curl -L \
+    -o /etc/yum.repos.d/indigoiam-stable-el9.repo \
+    https://indigo-iam.github.io/repo/repofiles/rhel/indigoiam-stable-el9.repo
+  ```
+
+3. Clear the package manager cache and install `iam-login-service` with:
+
+  ```shell
+  sudo dnf makecache
+  sudo dnf install -y iam-login-service
   ```
 
 ## IAM service configuration
@@ -53,19 +75,19 @@ The IAM login service is managed by `systemd`.
 To enable the service use the following command:
 
 ```shell
-$ sudo systemctl enable iam-login-service
+sudo systemctl enable iam-login-service
 ```
 
 To start the service use the following command:
 
 ```shell
-$ sudo systemctl start iam-login-service
+sudo systemctl start iam-login-service
 ```
 
 To access the service logs, use the following command:
 
 ```shell
-$ sudo journalctl -fu iam-login-service
+sudo journalctl -fu iam-login-service
 ```
 
 ### Deployment Tips
@@ -73,7 +95,7 @@ In headless servers, running `haveged` daemon is recommended to generate more en
 Before running the IAM login service, check the available entropy with:
 
 ```shell
-$ cat /proc/sys/kernel/random/entropy_avail
+cat /proc/sys/kernel/random/entropy_avail
 ```
 
 If the obtained value is less than 1000, then `haveged` daemon is mandatory.
@@ -81,20 +103,20 @@ If the obtained value is less than 1000, then `haveged` daemon is mandatory.
 Install EPEL repository:
 
 ```shell
-$ sudo yum install -y epel-release
+sudo dnf install -y epel-release
 ```
 
 Install Haveged:
 
 ```shell
-$ sudo yum install -y haveged
+sudo dnf install -y haveged
 ```
 
 Enable and run the `haveged` daemon with:
 
 ```shell
-$ sudo systemctl enable haveged
-$ sudo systemctl start haveged
+sudo systemctl enable haveged
+sudo systemctl start haveged
 ```
 
 [iam-pkg-repo]: https://indigo-iam.github.io/repo
