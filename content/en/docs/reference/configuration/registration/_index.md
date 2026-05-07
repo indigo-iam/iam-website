@@ -33,6 +33,8 @@ iam:
   registration:
 ```
 
+Together with the registration properties, the Spring `oidc` profile must be added to support login with an [external OIDC provider](https://indigo-iam.github.io/v/current/docs/reference/configuration/external-authentication/oidc/), while the `saml` profile must be used to support login with an [external SAML provider](https://indigo-iam.github.io/v/v1.13.0/docs/reference/configuration/external-authentication/saml/).
+
 #### Requiring external authentication
 
 To require that users must authenticate through an external IdP, you need to set the
@@ -54,7 +56,8 @@ iam:
 
 #### Filling information from IdP
 
-The first time a user authenticates in an IAM instance, the account creation form will be displayed. It is possible to request
+The first time a user authenticates in an IAM instance through an external provider,
+the account creation form will be displayed. It is possible to request
 that some of the fields are filled with the value of an IdP attribute.
 
 To enable filling the creation form with values provided by the IdP, the contents 
@@ -87,13 +90,48 @@ iam:
         field-behaviour: optional
 ```
 
-The `read-only` key can be set to `true` if you want to prevent that the  value provided supplied by the ID is modified by the user.
-**Note that if a field is defined as `read-only=true` and now value is not provided
-by the IdP, it may result that the user cannot submit the account creation form if the field,
-when it is required.**
+The `read-only` key can be set to `true` if you want to prevent that the value provided
+by the IdP can be modified by the user.
+**Note that if a field is defined as `read-only=true` and the value is not provided
+by the IdP, it may result that the user cannot submit the account creation form when the `field-behaviour`
+is _mandatory_.**
 
-The `external-auth-attribue` key must be the name of the IdP attribute, or token claim (when provided by SAML IdPs,
-or OIDC Providers, respectively) to use for the mentioned account creation form field.
+The `field-behaviour` key may be set to
+- _mandatory_ (default): the corresponding field is present and it MUST be filled with some information
+- _optional_: the field is present but it may be let empty
+- _hidden_: the field is not present at all.
+
+The `external-auth-attribue` key is used to map the name of the IdP attributes (for SAML), or token claims
+(for OIDC), into the mentioned account creation form field.
+More in details, the value of the `external-auth-attribute` refers to the output of the IAM endpoint
+`/iam/authn-info`, available only when a user (registered or not) authenticates through
+an external provider. The endpoint returns the user's information retrieved via remote IdP authentication, as an example (with SAML):
+
+```
+GET /iam/authn-info
+{
+    "type": "SAML",
+    "issuer": "https://idp.infn.it/saml2/idp/metadata.php",
+    "subject": "xxxxx@infn.it",
+    "subject_attribute": "urn:oid:1.3.6.1.4.1.5923.1.1.1.13",
+    "email": "enrico.vianello@cnaf.infn.it",
+    "given_name": "Enrico",
+    "family_name": "Vianello",
+    "suggested_username": "vianello@infn.it",
+    "additional_attributes": {
+        "GIVEN_NAME": "Enrico",
+        "urn:oid:2.5.4.11": "CNAF",
+        "urn:oid:1.3.6.1.4.1.5923.1.1.1.1": "staff",
+        "ORGANIZATION_NAME": "Istituto Nazionale di Fisica Nucleare",
+        "groups": "166_14_26_37264",
+        "EPPN": "vianello@infn.it",
+        "CN": "Enrico Vianello",
+        ...
+    }
+}
+```
+
+Here, the map from attributes to form fields is the following: the value of the `external-auth-attribute` is searched as a key of the above response, and if not found in the first level object, it is searched in the `additional_attributes` object.
 
 ### Link certificate upon registration
 
@@ -227,9 +265,9 @@ iam:
 
 Here we have three possible options for the `field-behaviour` key (the `read-only` key should be ignored):
 
-- `mandatory` (default): the _Note_ field is present and the user MUST fill it with some information
-- `optional`: the _Note_ field is present but the user may let it empty
-- `hidden`: the _Note_ field is not present.
+- _mandatory_ (default): the _Note_ field is present and the user MUST fill it with some information
+- _optional_: the _Note_ field is present but the user may let it empty
+- _hidden_: the _Note_ field is not present.
 
 ## Automatically set the nickname as attribute
 
