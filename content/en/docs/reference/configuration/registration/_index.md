@@ -85,12 +85,6 @@ iam:
       affiliation:
         read-only: false
         field-behaviour: optional
-      notes:
-        read-only: false
-        field-behaviour: mandatory
-      certificate:
-        read-only: false
-        field-behaviour: hidden
 ```
 
 The `read-only` key can be set to `true` if you want to prevent that the  value provided supplied by the ID is modified by the user.
@@ -215,6 +209,27 @@ oidc:
     trusted-idps: https://google.test.example,https://facebook.test.example,https://github.test.example
 ```
 
+## Customize the _Note_ registration field
+
+When a user sumbitts a registration request, the operator can configure if the _Note_ field
+of the registration form should be shown or not.
+
+The default IAM behaviour enabling the Spring `registration` profile is
+
+```yaml
+iam:
+  registration:
+    fields:
+      notes:
+        read-only: false
+        field-behaviour: mandatory
+```
+
+Here we have three possible options for the `field-behaviour` key (the `read-only` key should be ignored):
+
+- `mandatory` (default): the _Note_ field is present and the user MUST fill it with some information
+- `optional`: the _Note_ field is present but the user may let it empty
+- `hidden`: the _Note_ field is not present.
 
 ## Automatically set the nickname as attribute
 
