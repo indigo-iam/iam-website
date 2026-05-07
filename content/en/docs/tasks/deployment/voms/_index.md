@@ -5,12 +5,10 @@ description: >
   Instructions on how to deploy and configure the IAM VOMS attribute authority micro-service
 ---
 
-## The IAM VOMS attribute authority
-
 The IAM [VOMS attribute authority][voms-aa] (AA) provide a backward-compatible
 [VOMS][voms] support for a Virtual Organization managed with IAM.
 
-### Deployment architecture
+## Deployment architecture
 
 ![VOMS AA deployment](../img/iam-voms-aa.png)
 
@@ -28,12 +26,12 @@ docker images:
 
 - `cnafsd/nginx-httpg-voms`, for a NGINX server configured with the [VOMS module][nginx-httpg-voms],
 which replaces [OpenResty VOMS][openresty-voms]
-- `indigoiam/voms-aa-bp:{{< param voms_aa_version >}}`, for the VOMS AA service
+- `indigoiam/iam-voms-aa:{{< param voms_aa_version >}}`, for the VOMS AA service
 
 Deployment from packages is not currently supported for the VOMS attribute
 authority.
 
-### NGINX VOMS module configuration
+## NGINX VOMS module configuration
 
 The NGINX VOMS module requires:
 
@@ -61,22 +59,56 @@ Let's assume that the IAM VOMS AA will answer on `voms.test.example` for the VO
 
 For an example NGINX configuration, see the one use in [VOMS-enabled NGINX container][nginx-httpd-voms-config].
 
-#### VOMS AA configuration
+## VOMS AA configuration
 
 The VOMS AA is a Spring Boot application that shares the persistence
 layer implementation with IAM, and as such can inspect the IAM database. It can share
-the same environment file as the login service it is associated with, with the addition of the
-following variables:
+the same environment file as the login service it is associated with.
 
-- `VOMS_AA_HOST`: host name used to access the VOMS AA service
-- `VOMS_AA_PORT` VOMS AA port
-- `VOMS_AA_VO`: VO served by the VOMS AA service (lower case).
+### Using environment variables
 
+The following table shows the environment variables for VOMS AA configuration in common with IAM
+login service, related with the access to the database:
+
+| Name | Description | Default |
+|------|-------------|---------|
+| IAM_DB_HOST | Hostname of database server | localhost |
+| IAM_DB_PORT | Port of database server | 3306 |
+| IAM_DB_NAME | IAM database name | iam |
+| IAM_DB_URL_PARAMS | The custom list of URL connection parameters. It must start with "?" character, if defined. The default value overrides the session time zone setting on the server to "UTC" and disables SSL usage | (*) |
+| IAM_DB_USERNAME | Username for accessing the database | iam |
+| IAM_DB_PASSWORD | Password for accessing the database | pwd |
+| IAM_DB_MAX_ACTIVE | The default maximum database connection pool size | 50 |
+| IAM_DB_MIN_IDLE | The minimum number of idle connections the pool attempts to maintain | 8 |
+| IAM_DB_VALIDATION_QUERY | A configuration property used to validate the health of a database connection before it is handed out from the pool | SELECT 1 |
+
+(*) ?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+
+Moreover, the VOMS AA related environment variables are:
+
+| Name | Description | Default |
+|------|-------------|---------|
+| VOMS_AA_BINDING_ADDRESS | Address the server binds to (network interface) | 0.0.0.0 |
+| VOMS_AA_PORT | Port the server listens on | 8080 |
+| VOMS_AA_VONAME | Name of the Virtual Organization (VO) | test |
+| VOMS_AA_FORWARD_HEADERS_STRATEGY | Strategy for handling forwarded HTTP headers (e.g. from proxies). Set "native" if you're behind a proxy | none |
+| VOMS_AA_TLS_CERTIFICATE_PATH | Path to the TLS server certificate file | /certs/hostcert.pem |
+| VOMS_AA_TLS_PRIVATE_KEY_PATH | Path to the TLS private key file | /certs/hostkey.pem |
+| VOMS_AA_TLS_TRUST_ANCHORS_DIR | Directory containing trusted CA certificates | /etc/grid-security/certificates |
+| VOMS_AA_TLS_TRUST_ANCHORS_REFRESH_INTERVAL_SECS | Interval (in seconds) to reload trusted CA certificates | 14400 |
+| VOMS_AA_OPTIONAL_GROUP_LABEL | Attribute name used for optional group membership | wlcg.optional-group |
+| VOMS_AA_VOMS_ROLE_LABEL | Label name used for VOMS roles | voms.role |
+| VOMS_AA_USE_LEGACY_FQAN_ENCODING | Enable legacy encoding format for FQAN attributes | false |
+
+{{% alert title="Warning" color="warning" %}}
 A top level group equal to `VOMS_AA_VO` must be defined in IAM. The attributes appearing in the VOMS proxy include all the sub-groups of the parent group equal to the VO name. Top level groups different from the VO name may still be used for group-based authorization with JWTs, but will not appear in the proxy.
+{{% /alert %}}
 
-You also need to create a VOMS AA YAML configuration file with the content below (its content should
-be generic as it relies on standard environment variables used to configure the login service) and map it
-to the container as `/workspace/config/application.yml`.
+### Using YAML file
+
+In order to configure VOMS AA through a YAML file, you need to place the file
+at `/workspace/config/application.yml` in the container.
+The file content is shown below, together with the default value of the properties.
 
 ```yaml
 server:
@@ -90,24 +122,18 @@ spring:
     banner-mode: "off"
 
   jpa:
-    open-in-view: true
-
-  datasource:
-    dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlDataSource
-    url: jdbc:mysql://${IAM_DB_HOST}:${IAM_DB_PORT:3306}/${IAM_DB_NAME}?useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false
-    username: ${IAM_DB_USERNAME}
-    password: ${IAM_DB_PASSWORD}
-    max-active: ${IAM_DB_MAX_ACTIVE:10}
-    max-idle:  ${IAM_DB_MAX_IDLE:5}
-    initial-size: ${IAM_DB_INITIAL_SIZE:1}
-    test-while-idle: ${IAM_DB_TEST_WHILE_IDLE:true}
-    test-on-borrow: ${IAM_DB_TEST_ON_BORROW:true}
-    validation-query: ${IAM_DB_VALIDATION_QUERY:SELECT 1}
-    time-between-eviction-runs-millis: ${IAM_DB_TIME_BETWEEN_EVICTION_RUNS_MILLIS:5000}
-    min-evictable-idle-time-millis: ${IAM_DB_MIN_EVICTABLE_IDLE_TIME_MILLIS:60000}
+    open-in-view: false
 
   flyway:
     enabled: false
+
+  datasource:
+    url: jdbc:mysql://db:3306/iam?useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false
+    username: iam
+    password: pwd
+    max-active: 50
+    minimum-idle: 8
+    validation-query: SELECT 1
 
 voms:
   tls:
@@ -116,15 +142,17 @@ voms:
     trust-anchors-dir: /etc/grid-security/certificates
     trust-anchors-refresh-interval-secs: 14400
   aa:
-    host: ${VOMS_AA_HOST:undefined}
-    port: ${VOMS_AA_PORT:undefined}
-    vo-name: ${VOMS_AA_VO:undefined}
-    use-legacy-fqan-encoding: ${VOMS_AA_USE_LEGACY_FQAN_ENCODING:true}
+    host: 0.0.0.0
+    port: 8080
+    vo-name: test
+    optional-group-label: wlcg.optional-group
+    voms-role-label: voms.role
+    use-legacy-fqan-encoding: false
 ```
 
-To map this file (in the example below, `voms-aa.yml`as `/workspace/config/application.yml`), you
+Assuming that the configuration file is locally named as `voms-aa.yml`, you
 typically need to add the following volume definition to the VOMS AA section of your Podman/Docker
-compose file:
+compose file, in order to map it into the proper application file:
 
 ```yaml
         volumes:
@@ -136,7 +164,7 @@ compose file:
 In addition, you need to configure the EGI trust anchors and the VOMS AA certificate and
 private key, as described below.
 
-### Configuration of EGI trust anchors and VOMS AA certificate
+## Configuration of EGI trust anchors and VOMS AA certificate
 
 Both the VOMS-enabled NGINX service and the VOMS AA service require the proper configuration
 of the container, the certificate and private key to use and the EGI trust anchors. If using
@@ -155,7 +183,7 @@ container. See the Podman/Docker Compose example for more information.
 Note that the private key must be readable by the user running the service. As it is not a good
 practice to make it world readable, it may be necessary to adjust its ownership.
 
-### Podman/Docker Compose example
+## Podman/Docker Compose example
 
 For an example of the container configurations, see the [VOMS AA Docker compose
 file][voms-aa-compose].
