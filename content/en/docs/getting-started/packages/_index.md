@@ -18,7 +18,7 @@ Since INDIGO IAM v1.14.0 we release signed RPMs.
 1. Install the INDIGO IAM release key:
 
   ```shell
-  sudo rpm --import https://repo.cloud.cnaf.infn.it/repository/indigo-iam/CNAFSD.asc
+  sudo rpm --import https://indigo-iam.github.io/repo/gpgkeys/indigo-iam-release.pub.gpg
   ```
 
 ### On AlmaLinux 8
