@@ -12,7 +12,7 @@ To include this feature, the `application.yml` file must contain the following p
 iam:
   registration:
     default-groups:
-      - name: /<iam-group>
+      - name: <iam-group>
         enrollment: INSERT
 ```
 
@@ -22,9 +22,9 @@ As the `iam.registration.default-groups` is a list, more than one group may be c
 iam:
   registration:
     default-groups:
-      - name: /atlas
+      - name: atlas
         enrollment: INSERT
-      - name: /privileged
+      - name: privileged
         enrollment: INSERT
 ```
 
