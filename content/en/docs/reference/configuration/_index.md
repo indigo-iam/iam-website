@@ -511,6 +511,67 @@ IAM_CLIENT_SCOPES=openid profile email
 IAM_CLIENT_FORWARD_HEADERS_STRATEGY=none
 ```
 
+## VOMS AA
+
+The following environment variables for VOMS AA configuration (related to the access to the database)
+are in common with IAM login service:
+
+```bash
+# Hostname of database server
+IAM_DB_HOST=localhost
+# Port of database server
+IAM_DB_PORT=3306
+# IAM database name
+IAM_DB_NAME=iam
+# The custom list of URL connection parameters. It must start with "?" character,
+# if defined. The default value overrides the session time zone setting on the
+# server to "UTC" and disables SSL usage
+IAM_DB_URL_PARAMS=?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+# Username for accessing the database
+IAM_DB_USERNAME=iam
+# Password for accessing the database
+IAM_DB_PASSWORD=pwd
+# The default maximum database connection pool size
+IAM_DB_MAX_ACTIVE=50
+# The minimum number of idle connections the pool attempts to maintain
+IAM_DB_MIN_IDLE=8
+# A configuration property used to validate the health of a database connection
+# before it is handed out from the pool
+IAM_DB_VALIDATION_QUERY=SELECT 1
+```
+
+Moreover, the VOMS AA related environment variables are:
+
+```bash
+# Address the server binds to (network interface)
+VOMS_AA_BINDING_ADDRESS=0.0.0.0
+# Port the server listens on
+VOMS_AA_PORT=8080
+# Name of the Virtual Organization (VO)
+VOMS_AA_VONAME=test
+# Strategy for handling forwarded HTTP headers (e.g. from proxies).
+# Set "native" if you're behind a proxy
+VOMS_AA_FORWARD_HEADERS_STRATEGY=none
+# Path to the TLS server certificate file
+VOMS_AA_TLS_CERTIFICATE_PATH=/certs/hostcert.pem
+# Path to the TLS private key file
+VOMS_AA_TLS_PRIVATE_KEY_PATH=/certs/hostkey.pem
+# Directory containing trusted CA certificates
+VOMS_AA_TLS_TRUST_ANCHORS_DIR=/etc/grid-security/certificates
+# Interval (in seconds) to reload trusted CA certificates
+VOMS_AA_TLS_TRUST_ANCHORS_REFRESH_INTERVAL_SECS=14400
+# Attribute name used for optional group membership
+VOMS_AA_OPTIONAL_GROUP_LABEL=wlcg.optional-group
+# Label name used for VOMS roles
+VOMS_AA_VOMS_ROLE_LABEL=voms.role
+# Enable legacy encoding format for FQAN attributes
+VOMS_AA_USE_LEGACY_FQAN_ENCODING=false
+```
+
+{{% alert title="Warning" color="warning" %}}
+A top level group equal to `VOMS_AA_VONAME` must be defined in IAM. The attributes appearing in the VOMS proxy include all the sub-groups of the parent group equal to the VO name. Top level groups different from the VO name may still be used for group-based authorization with JWTs, but will not appear in the proxy.
+{{% /alert %}}
+
 [spring-boot-conf-rules]: https://docs.spring.io/spring-boot/docs/1.3.8.RELEASE/reference/html/boot-features-external-config.html
 [redis]: https://redis.io/
 [wlcg-profile]: https://github.com/WLCG-AuthZ-WG/common-jwt-profile/blob/master/profile.md#token-validation

@@ -61,48 +61,14 @@ For an example NGINX configuration, see the one use in [VOMS-enabled NGINX conta
 
 ## VOMS AA configuration
 
+### Using environment variables
+
 The VOMS AA is a Spring Boot application that shares the persistence
 layer implementation with IAM, and as such can inspect the IAM database. It can share
 the same environment file as the login service it is associated with.
 
-### Using environment variables
-
-The following table shows the environment variables for VOMS AA configuration in common with IAM
-login service, related with the access to the database:
-
-| Name | Description | Default |
-|------|-------------|---------|
-| IAM_DB_HOST | Hostname of database server | localhost |
-| IAM_DB_PORT | Port of database server | 3306 |
-| IAM_DB_NAME | IAM database name | iam |
-| IAM_DB_URL_PARAMS | The custom list of URL connection parameters. It must start with "?" character, if defined. The default value overrides the session time zone setting on the server to "UTC" and disables SSL usage | (*) |
-| IAM_DB_USERNAME | Username for accessing the database | iam |
-| IAM_DB_PASSWORD | Password for accessing the database | pwd |
-| IAM_DB_MAX_ACTIVE | The default maximum database connection pool size | 50 |
-| IAM_DB_MIN_IDLE | The minimum number of idle connections the pool attempts to maintain | 8 |
-| IAM_DB_VALIDATION_QUERY | A configuration property used to validate the health of a database connection before it is handed out from the pool | SELECT 1 |
-
-(*) ?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-
-Moreover, the VOMS AA related environment variables are:
-
-| Name | Description | Default |
-|------|-------------|---------|
-| VOMS_AA_BINDING_ADDRESS | Address the server binds to (network interface) | 0.0.0.0 |
-| VOMS_AA_PORT | Port the server listens on | 8080 |
-| VOMS_AA_VONAME | Name of the Virtual Organization (VO) | test |
-| VOMS_AA_FORWARD_HEADERS_STRATEGY | Strategy for handling forwarded HTTP headers (e.g. from proxies). Set "native" if you're behind a proxy | none |
-| VOMS_AA_TLS_CERTIFICATE_PATH | Path to the TLS server certificate file | /certs/hostcert.pem |
-| VOMS_AA_TLS_PRIVATE_KEY_PATH | Path to the TLS private key file | /certs/hostkey.pem |
-| VOMS_AA_TLS_TRUST_ANCHORS_DIR | Directory containing trusted CA certificates | /etc/grid-security/certificates |
-| VOMS_AA_TLS_TRUST_ANCHORS_REFRESH_INTERVAL_SECS | Interval (in seconds) to reload trusted CA certificates | 14400 |
-| VOMS_AA_OPTIONAL_GROUP_LABEL | Attribute name used for optional group membership | wlcg.optional-group |
-| VOMS_AA_VOMS_ROLE_LABEL | Label name used for VOMS roles | voms.role |
-| VOMS_AA_USE_LEGACY_FQAN_ENCODING | Enable legacy encoding format for FQAN attributes | false |
-
-{{% alert title="Warning" color="warning" %}}
-A top level group equal to `VOMS_AA_VO` must be defined in IAM. The attributes appearing in the VOMS proxy include all the sub-groups of the parent group equal to the VO name. Top level groups different from the VO name may still be used for group-based authorization with JWTs, but will not appear in the proxy.
-{{% /alert %}}
+In order to configure VOMS AA using environment variables, please refer to the
+[Configuration](/docs/reference/configuration/#voms-aa) section.
 
 ### Using YAML file
 
