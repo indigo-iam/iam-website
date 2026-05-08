@@ -54,16 +54,21 @@ scenarios not served by the default templates.
 
 ## IAM login service
 
+The value of the below environment variables are the default one configured into IAM and allows
+to quickly run the application in development mode. They are not intended for a production environment.
+
 ### Basic service configuration 
 
 ```bash
-# The IAM service will list for requests on this host
+# The IAM service will list for requests on this host.
+# In a production environment it could be someting like 'iam.test.example'
 IAM_HOST=localhost
 
 # The IAM service webapp will bind on this port
 IAM_PORT=8080
 
-# The IAM web application base URL
+# The IAM web application base URL.
+# We highly recommend to use https in production.
 IAM_BASE_URL=http://${IAM_HOST}:8080
 
 # The OpenID Connect issuer configured for this IAM instance.
@@ -72,7 +77,7 @@ IAM_ISSUER=http://${IAM_HOST}:8080
 
 # The path to the JSON keystore that holds the keys IAM will use to sign and
 # verify token signatures
-IAM_KEY_STORE_LOCATION=
+IAM_KEY_STORE_LOCATION=classpath:keystore.jwks
 
 # HTTP caching header setting public key lifetime (in seconds).
 # The recommended lifetime according to the WLCG profile* is 6 hours
@@ -145,7 +150,7 @@ IAM_TOPBAR_TITLE="INDIGO IAM for ${IAM_ORGANISATION_NAME}"
 
 ```bash
 # The host where the MariaDB/MySQL daemon is running
-IAM_DB_HOST=
+IAM_DB_HOST=localhost
 
 # The database port
 IAM_DB_PORT=3306
@@ -247,7 +252,7 @@ Authentication section]({{< ref "/docs/reference/configuration/external-authenti
 
 ```bash
 # The SAML entity ID for this IAM instance
-IAM_SAML_ENTITY_ID=
+IAM_SAML_ENTITY_ID=urn:iam:iam-devel
 
 # Text shown in the SAML login button on the IAM login page
 IAM_SAML_LOGIN_BUTTON_TEXT=Sign in with SAML
@@ -255,21 +260,21 @@ IAM_SAML_LOGIN_BUTTON_TEXT=Sign in with SAML
 ## SAML keystore settings
 
 # The keystore holding certificates and keys used for SAML crypto
-IAM_SAML_KEYSTORE= 
+IAM_SAML_KEYSTORE=classpath:/saml/samlKeystore.jks
 
 # The SAML keystore password
-IAM_SAML_KEYSTORE_PASSWORD=
+IAM_SAML_KEYSTORE_PASSWORD=password
 
 # The identifier of the key that should be used to sign requests/assertions
-IAM_SAML_KEY_ID=
+IAM_SAML_KEY_ID=iam
 
 # The password of the SAML key that will be used to sign requests/assertions
-IAM_SAML_KEY_PASSWORD=
+IAM_SAML_KEY_PASSWORD=password
 
 ## Metadata settings
 
 # a URL pointing to the SAML federation or IdP metadata
-IAM_SAML_IDP_METADATA=
+IAM_SAML_IDP_METADATA=classpath:/saml/idp-metadata.xml
 
 # Metadata refresh period (in seconds)
 IAM_SAML_METADATA_LOOKUP_SERVICE_REFRESH_PERIOD_SEC=600
