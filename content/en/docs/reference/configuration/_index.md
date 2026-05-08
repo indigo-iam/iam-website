@@ -158,6 +158,11 @@ IAM_DB_PORT=3306
 # The database name
 IAM_DB_NAME=iam
 
+# The custom list of URL connection parameters. It must start with "?" character,
+# if defined. The default value overrides the session time zone setting on the
+# server to "UTC" and disables SSL usage
+IAM_DB_URL_PARAMS=?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+
 # The database username
 IAM_DB_USERNAME=iam
 
