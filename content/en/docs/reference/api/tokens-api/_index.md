@@ -5,6 +5,11 @@ title: IAM Token management API
 The IAM server has a RESTful API used to list and revoke active access and
 refresh tokens.
 
+{{% alert title="Warning" color="warning" %}}
+When IAM is configured such to [not store access tokens in database](/docs/reference/configuration/#persisting-access-tokens), the following description is not anymore valid and the endpoints
+will not respond as per description.
+{{% /alert %}}
+
 Access to the API is limited to users with administrator privileges authenticated via a web session or
 to access token containing predefined restricted System Scopes.  
 All examples assume authorization via OAuth2 bearer token; e.g.
