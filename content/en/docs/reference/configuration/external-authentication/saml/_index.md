@@ -67,6 +67,13 @@ cryptographic material and other information that make the federated
 authentication schemes work reliably and securely. For more information on SAML
 metadata, see [the Shibboleth metadata documentation][shib-docs-md].
 
+{{% alert title="Warning" color="warning" %}}
+In case you configure IAM such to support a SAML federation, the polling and
+refreshing of the federation metadata may encounter an out of memory issue.
+Then, we reccomend to increase the heap space to 3 GB through the JVM options:
+`IAM_JAVA_OPTS=-Xms3000m -Xmx3000m`.
+{{% /alert %}}
+
 ###  Signed metadata advice 
 
 Typically identity federations sign the SAML metadata for security reasons, and

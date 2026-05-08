@@ -303,6 +303,13 @@ IAM_SAML_MAX_AUTHENTICATION_AGE=86400
 # user authenticated with SAML
 IAM_SAML_ID_RESOLVERS=eduPersonUniqueId,eduPersonTargetedId,eduPersonPrincipalName
 ```
+{{% alert title="Warning" color="warning" %}}
+In case you configure IAM such to support a SAML federation, the polling and
+refreshing of the federation metadata (specified by the environment variable
+`IAM_SAML_IDP_METADATA`) may encounter an out of memory issue.
+Then, we reccomend to increase the heap space to 3 GB through the JVM options:
+`IAM_JAVA_OPTS=-Xms3000m -Xmx3000m`.
+{{% /alert %}}
 
 For more information and examples, see the [SAML Authentication
 section]({{< ref "/docs/reference/configuration/external-authentication/saml" >}}).
