@@ -62,6 +62,20 @@ details (except secrets) without edit permission
 
 <img width="1273" height="901" alt="image" src="https://github.com/user-attachments/assets/7a9478c8-c153-487d-8b89-e59a601e658d" />
 
+### Service account privileges
+#### Set
+A user account can be designated as a service account from the User Home page by clicking the “Set as Service Account” button:
+
+<img width="768" height="972" alt="image" src="https://github.com/user-attachments/assets/c2067158-dd51-4fc6-abdf-5bd6b5b761a7" />
+
+Once an account is configured as a service account, it is exempt from the AUP (Acceptable Use Policy) signature process. Email notification will be sent to the user.
+Service accounts are typically used solely to own robot certificates or manage token clients required by grid services.
+
+#### Revoke
+To revoke service account status "Revoke service account" button can be used. Once successfull, email notification will be sent to the user.
+
+<img width="733" height="947" alt="image" src="https://github.com/user-attachments/assets/ead289df-624e-47b3-92b3-c5653a4e6b8a" />
+
 
 ## Managing external user account identities
 
