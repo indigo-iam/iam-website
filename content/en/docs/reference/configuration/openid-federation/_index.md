@@ -39,7 +39,8 @@ An example here:
         "token"
       ],
       "client_registration_types_supported": [
-        "explicit"
+        "explicit",
+        "automatic"
       ],
       "federation_registration_endpoint": "http://iam.example.org/iam/api/oid-fed/client-registration",
       "request_uri_parameter_supported": false,
@@ -148,7 +149,7 @@ OpenID Federation defines two methods for Client registration that both rely on 
 
 {{% alert title="Info" color="info" %}}
 In the current implementation, **Explicit Client Registration is based solely on the RP’s self-signed Entity Configuration**.  
-Support for Explicit Client Registration with RP's Trust Chain and Automatic Client Registration will be introduced in future versions.
+Support for Explicit Client Registration with RP's Trust Chain will be introduced in future versions.
 {{% /alert %}}
 
 ### Explicit registration
@@ -223,6 +224,23 @@ Example (decoded payload):
 }
 ```
 
+### Automatic registration
+
+Automatic registration is triggered when the RP sends an Authorization Request to IAM (OP)’s Authorization Endpoint.
+In this flow, IAM automatically registers the RP if it is able to successfully resolve and validate the RP’s trust chain and if a common Trust Anchor exists between the two parties.
+
+IAM may obtain the RP’s trust information either:
+
+* by resolving the RP’s Entity Configuration starting from its `client_id`/`entity_id`, or
+* through a `trust_chain` explicitly provided by the RP.
+
+The Authorization Request is conveyed as a signed Request Object passed through the `request` parameter.
+The Request Object MUST contain the claims required by OpenID Federation, including `iss`, `sub`, `aud`, `client_id`, `jti`, and MAY additionally include `iat`, `exp` and `trust_chain`.  
+If the trust evaluation succeeds, IAM automatically creates a Client registration for the RP.
+
+Unlike Explicit Client Registration, where the `client_id` is assigned by IAM, in Automatic Client Registration the `client_id` corresponds to the RP’s `entity_id`.
+No `client_secret` is issued. The RP is authenticated via proof of possession of a private key corresponding to one of the public keys advertised in its Entity Configuration.
+
 ## Configuration
 
 To enable OpenID Federation support, activate the `openid-federation` profile, for example `-Dspring.profiles.active=openid-federation`.
@@ -251,4 +269,3 @@ openid-federation:
       # URI of a logo representing the entity. Not mandatory
       logo-uri:
 ```
-
