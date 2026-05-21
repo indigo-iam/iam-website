@@ -4,8 +4,6 @@ linkTitle: "Enforce MFA for all users"
 weight: 100
 ---
 
-## Configuration to enforce MFA for all users
-
 Administrators can configure IAM to enforce multi-factor authentication (MFA) for all users.
 In the application-mfa.yaml file, the following property should be configured. By default, it is set to false:
 ```yaml
