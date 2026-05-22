@@ -240,6 +240,64 @@ IAM_SAML_METADATA_LOOKUP_SERVICE_REFRESH_PERIOD_SEC=3600
 IAM_SAML_LOGIN_BUTTON_TEXT="Sign in with IDEM"
 ```
 
+## Configuring the AuthnContext class references
+
+When IAM issues a SAML `AuthnRequest`, it can include a
+`RequestedAuthnContext` element listing the authentication context class
+references (AuthnContext class-refs) that the Identity Provider (IdP) is
+expected to satisfy.
+
+Starting from IAM v1.14.0 the list is fully configurable via the
+`saml.authn-context.class-refs` property in `application-saml.yml`, and IAM
+can also be configured to omit the `RequestedAuthnContext` element from
+outgoing requests altogether.
+
+### Default configuration
+
+The default `application-saml.yml` embedded in the IAM file now ships
+with the following AuthnContext block:
+
+```yaml
+saml:
+  # ...
+  authn-context:
+    # Edit class-refs to customise the AuthnContextClassRef values sent in SAML requests.
+    # Set to an empty list to send no AuthnContext at all (IdP decides):
+    # class-refs: []
+    # (or)
+    class-refs:
+      - https://refeds.org/profile/mfa
+      - https://refeds.org/profile/sfa
+      - urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+      - urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified
+```
+
+### Common scenarios
+The simplest interoperability fix is to drop the `RequestedAuthnContext`
+element entirely and let the IdP choose whatever authentication method it
+considers acceptable. To do this, override the list with an empty value in
+your custom `application-saml.yml`:
+
+```yaml
+saml:
+  authn-context:
+    class-refs: []
+```
+
+#### Request a specific authentication method
+
+To ask the IdP for a specific authentication context — for example, MFA
+only — list the URI(s) you want to request:
+
+```yaml
+saml:
+  authn-context:
+    class-refs:
+      - https://refeds.org/profile/mfa
+```
+
+You can list as many class references as you need. The IdP will be asked to satisfy any one of them.
+
 ## Custom SAML configuration
 
 The configuration based on environment variables relies on a [configuration
