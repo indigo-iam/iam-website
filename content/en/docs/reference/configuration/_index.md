@@ -149,13 +149,13 @@ IAM_TOPBAR_TITLE="INDIGO IAM for ${IAM_ORGANISATION_NAME}"
 ### Database configuration
 
 ```bash
-# The host where the MariaDB/MySQL daemon is running
+# Hostname of database server
 IAM_DB_HOST=localhost
 
-# The database port
+# Port of database server
 IAM_DB_PORT=3306
 
-# The database name
+# IAM database name
 IAM_DB_NAME=iam
 
 # The custom list of URL connection parameters. It must start with "?" character,
@@ -163,38 +163,21 @@ IAM_DB_NAME=iam
 # server to "UTC" and disables SSL usage
 IAM_DB_URL_PARAMS=?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
 
-# The database username
+# Username for accessing the database
 IAM_DB_USERNAME=iam
 
-# The database password 
+# Password for accessing the database
 IAM_DB_PASSWORD=pwd
 
-## Database connection pool options
-
-# Maximum number of active connections to the database
+# The default maximum database connection pool size
 IAM_DB_MAX_ACTIVE=50
 
-# Maximum number of idle connections in the pool 
-IAM_DB_MAX_IDLE=5
+# The minimum number of idle connections the pool attempts to maintain
+IAM_DB_MIN_IDLE=8
 
-# Initial size of the database connection pool
-IAM_DB_INITIAL_SIZE=8
-
-# Should idle connections in the pool be tested?
-IAM_DB_TEST_WHILE_IDLE=true
-
-# Should connections in the pool be tested when borrowed?
-IAM_DB_TEST_ON_BORROW=true
-
-# Which SQL query should be used to test connections?
+# A configuration property used to validate the health of a database connection
+# before it is handed out from the pool
 IAM_DB_VALIDATION_QUERY=SELECT 1
-
-# Time between database connection pool eviction runs (in msec)
-IAM_DB_TIME_BETWEEN_EVICTION_RUNS_MILLIS=5000
-
-# The minimum amount of time a connection may be idle in the pool
-# before it is considered for eviction (in msec)
-IAM_DB_MIN_EVICTABLE_IDLE_TIME_MILLIS=60000
 ```
 
 ### Access token contents configuration 
@@ -212,7 +195,8 @@ IAM_ACCESS_TOKEN_INCLUDE_SCOPE=false
 IAM_ACCESS_TOKEN_INCLUDE_NBF=false
 
 # Configures how long before the token's issue time it becomes valid
-# The default value of 60 configures the token to be valid starting 60 seconds before it is issued
+# The default value of 60 configures the token to be valid starting 60
+# seconds before it is issued
 IAM_ACCESS_TOKEN_NBF_OFFSET_SECONDS=60
 ```
 
@@ -235,6 +219,7 @@ For more information, see the [Local Authentication section][local-authn].
 ```bash
 # Set to 'hidden' if you want to hide the local login form
 IAM_LOCAL_AUTHN_LOGIN_PAGE_VISIBILITY=visible
+
 # Enables local login form to all users.
 # It can be restricted, changing the value to 'vo-admins' or 'none'
 IAM_LOCAL_AUTHN_ENABLED_FOR=all
@@ -360,12 +345,12 @@ IAM_NOTIFICATION_ADMIN_NOTIFICATION_POLICY=notify-address
 # from a profile. It follows the notifcation strategy of notification policy.
 IAM_NOTIFICATION_CERTIFICATE=false
 
-# Notification policy for group requests. Default value notifies both
-# admins and group managers. Set to notify-gms if you want to notify only group managers
+# Notification policy for group requests. Default value notifies both admins and
+# group managers. Set to notify-gms if you want to notify only group managers
 IAM_NOTIFICATION_GROUP_MANAGER_NOTIFICATION_POLICY=notify-gms-and-admins
 
-# Time interval, in milliseconds, between two consecutive runs of IAM notification 
-# dispatch task 
+# Time interval, in milliseconds, between two consecutive runs
+# of IAM notification dispatch task 
 IAM_NOTIFICATION_TASK_DELAY=30000
 
 # Retention of delivered messages, in days
@@ -391,24 +376,31 @@ For more information see the [Client registration
 section]({{< ref "/docs/reference/configuration/client-registration" >}}).
 
 ```bash
-# Specifies who can register a client. Default is anyone, so also not registered users.
-# Other possible values are: REGISTERED_USERS and ADMINISTRATORS
+# Specifies who can register a client. Default is anyone, so also not registered
+#  users. Other possible values are: REGISTERED_USERS and ADMINISTRATORS
 IAM_CLIENT_REGISTRATION_ALLOW_FOR=ANYONE
+
 # Set to false if you do not want to enable client registration (default is true)
 IAM_CLIENT_REGISTRATION_ENABLE=true
-# Set to true if you want only admin users to be able to create custom scopes (default is false)
+
+# Set to true if you want only admin users to be able to create custom scopes
+# (default is false)
 IAM_CLIENT_ADMIN_ONLY_CUSTOM_SCOPES=false
-# Set the default validity in seconds of an AT requested by any newly registered client.
-# Default is 1 hour, but it can be changed per client
+
+# Set the default validity in seconds of an AT requested by any newly
+# registered client. Default is 1 hour, but it can be changed per client
 IAM_DEFAULT_ACCESS_TOKEN_VALIDITY_SECONDS=3600
-# Set the default validity in seconds of a device code requested by any newly registered client.
-# Default is 10 minutes, but it can be changed per client
+
+# Set the default validity in seconds of a device code requested by any newly
+# registered client. Default is 10 minutes, but it can be changed per client
 IAM_DEFAULT_DEVICE_CODE_VALIDITY_SECONDS=600
-# Set the default validity in seconds of an ID token requested by any newly registered client.
-# Default is 10 minutes, but it can be changed per client
+
+# Set the default validity in seconds of an ID token requested by any newly
+# registered client. Default is 10 minutes, but it can be changed per client
 IAM_DEFAULT_ID_TOKEN_VALIDITY_SECONDS=600
-# Set the default validity in seconds of an RT requested by any newly registered client.
-# Default is 30 days, but it can be changed per client
+
+# Set the default validity in seconds of an RT requested by any newly
+# registered client. Default is 30 days, but it can be changed per client
 IAM_DEFAULT_REFRESH_TOKEN_VALIDITY_SECONDS=2592000
 ```
 
@@ -428,8 +420,8 @@ IAM_CLIENT_TRACK_LAST_USED=false
 # is displayed in the login page
 IAM_PRIVACY_POLICY_URL=
 
-# The text displayed in the login page for the privacy policy URL specified
-# above
+# The text displayed in the login page for the privacy
+# policy URL specified above
 IAM_PRIVACY_POLICY_TEXT=Privacy policy
 ```
 ### Support Button Settings 
@@ -450,17 +442,22 @@ IAM_SUPPORT_TEXT=Support
 ```bash
 # URL of one or more trusted trust anchors. May be a comma-separated list
 IAM_OIDFED_TRUST_ANCHORS=https://ta.example.com
+
 # Validity duration (in seconds) of the generated Entity Configuration document
 IAM_OIDFED_ENTITY_CONFIGURATION_EXPIRATION_SECONDS=86400
+
 # One or more federation authorities that this entity trusts.
 # May be a comma-separated list
 IAM_OIDFED_ENTITY_CONFIGURATION_AUTHORITY_HINTS=https://ta.example.com,https://ia.example.com
+
 # Human-readable name of the organization operating this federation entity.
 # Filling this property is not mandatory
 IAM_OIDFED_FEDERATION_ENTITY_ORGANIZATION_NAME=
+
 # Contact info of administrators (e.g. email addresses).
 # May be comma-separated. Not mandatory
 IAM_OIDFED_FEDERATION_ENTITY_CONTACTS=
+
 # URI of a logo representing the entity. Not mandatory
 IAM_OIDFED_FEDERATION_ENTITY_LOGO_URI=
 ```
@@ -523,64 +520,53 @@ IAM_CLIENT_SECRET=secret
 # Default scopes allowed to the client application (optional)
 IAM_CLIENT_SCOPES=openid profile email
 
-# Use forwarded headers from reverse proxy. Set this to native when deploying the
-# service behind a reverse proxy
+# Use forwarded headers from reverse proxy. Set this to native when
+# deploying the service behind a reverse proxy
 IAM_CLIENT_FORWARD_HEADERS_STRATEGY=none
 ```
 
 ## VOMS AA
 
-The following environment variables for VOMS AA configuration (related to the access to the database)
-are in common with IAM login service:
+The environment variables for VOMS AA which tune the access to the database
+are in common with IAM login service, even if they are sourced through a separated `mysql` profile
+(i.e. they need to be defined for both IAM login service and VOMS AA when they run in different
+container/machines). See [here](/docs/reference/configuration/#database-configuration) in order to set the proper variables.
 
-```bash
-# Hostname of database server
-IAM_DB_HOST=localhost
-# Port of database server
-IAM_DB_PORT=3306
-# IAM database name
-IAM_DB_NAME=iam
-# The custom list of URL connection parameters. It must start with "?" character,
-# if defined. The default value overrides the session time zone setting on the
-# server to "UTC" and disables SSL usage
-IAM_DB_URL_PARAMS=?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-# Username for accessing the database
-IAM_DB_USERNAME=iam
-# Password for accessing the database
-IAM_DB_PASSWORD=pwd
-# The default maximum database connection pool size
-IAM_DB_MAX_ACTIVE=50
-# The minimum number of idle connections the pool attempts to maintain
-IAM_DB_MIN_IDLE=8
-# A configuration property used to validate the health of a database connection
-# before it is handed out from the pool
-IAM_DB_VALIDATION_QUERY=SELECT 1
-```
 
-Moreover, the VOMS AA related environment variables are:
+Moreover, the VOMS AA-only environment variables are:
 
 ```bash
 # Address the server binds to (network interface)
 VOMS_AA_BINDING_ADDRESS=0.0.0.0
+
 # Port the server listens on
 VOMS_AA_PORT=8080
+
 # Name of the Virtual Organization (VO)
 VOMS_AA_VONAME=test
+
 # Strategy for handling forwarded HTTP headers (e.g. from proxies).
 # Set "native" if you're behind a proxy
 VOMS_AA_FORWARD_HEADERS_STRATEGY=none
+
 # Path to the TLS server certificate file
 VOMS_AA_TLS_CERTIFICATE_PATH=/certs/hostcert.pem
+
 # Path to the TLS private key file
 VOMS_AA_TLS_PRIVATE_KEY_PATH=/certs/hostkey.pem
+
 # Directory containing trusted CA certificates
 VOMS_AA_TLS_TRUST_ANCHORS_DIR=/etc/grid-security/certificates
+
 # Interval (in seconds) to reload trusted CA certificates
 VOMS_AA_TLS_TRUST_ANCHORS_REFRESH_INTERVAL_SECS=14400
+
 # Attribute name used for optional group membership
 VOMS_AA_OPTIONAL_GROUP_LABEL=wlcg.optional-group
+
 # Label name used for VOMS roles
 VOMS_AA_VOMS_ROLE_LABEL=voms.role
+
 # Enable legacy encoding format for FQAN attributes
 VOMS_AA_USE_LEGACY_FQAN_ENCODING=false
 ```
