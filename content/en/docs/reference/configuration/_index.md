@@ -465,7 +465,7 @@ IAM_OIDFED_FEDERATION_ENTITY_LOGO_URI=
 ### Redis configuration
 
 IAM supports storing HTTP session information and its in-memory cache
-(for the well-known endpoint and scope matchers) in an external [redis][redis] server.
+(for the well-known endpoint, scope matchers, etc.) in an external [redis][redis] server.
 
 This can be useful when [deploying multiple replicas of the IAM
 service](../../../docs/tasks/deployment/ha).
@@ -503,8 +503,12 @@ IAM_HEALTH_REDIS_PROBE_ENABLED=false
 # The default behavior is an in-memory cache
 IAM_CACHE_ENABLED=true
 
-# Allow to cache the IAM information (i.e. well-known endpoint and
-# scope matchers) into an external Redis service
+# Refresh period for the external OIDC providers well-known
+# endpoint cache (in seconds). Used during Proxied token introspection
+# (disabled by default)
+IAM_OIDC_DISCOVERY_CLEANUP_PERIOD_SECS=86400
+
+# Allow to cache the IAM information into an external Redis service
 IAM_CACHE_REDIS_ENABLED=false
 ```
 
