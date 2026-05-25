@@ -34,4 +34,14 @@ $ curl -u $CLIENT_ID:$CLIENT_SECRET https://iam.test.example/introspect -d token
 }
 ```
 
+## Proxied token introspection
+
+INDIGO IAM also supports for the Proxied token introspection at the `/introspection` endpoint,
+as described in [AARC-G052][proxied-token-introspection].
+
+In order to enable the Proxied token introspection one has to configure IAM as per
+[documentation](/docs/reference/configuration/proxied-token-introspection).
+
 [oauth-token-introspection]: https://tools.ietf.org/html/rfc7662
+[proxied-token-introspection]: https://zenodo.org/records/10205863
+
