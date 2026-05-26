@@ -1,7 +1,7 @@
 ---
 title: "Configuration to enforce MFA for all users"
 linkTitle: "Enforce MFA for all users"
-weight: 100
+weight: 1
 ---
 
 Administrators can configure IAM to enforce multi-factor authentication (MFA) for all users.

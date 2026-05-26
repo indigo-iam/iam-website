@@ -437,6 +437,25 @@ IAM_SUPPORT_URL=
 IAM_SUPPORT_TEXT=Support
 ```
 
+### mfa
+
+```bash
+# If set to 'false', users cannot enroll in MFA because
+# the 'Enable MFA' button will NOT be shown.
+IAM_TOTP_MFA_ENABLE_MFA_SETTINGS_BUTTON=true
+
+# The current password used to encrypt and decrypt TOTP secrets.
+# The default password MUST be changed from `define_me_please` to a preferred strong password.
+IAM_TOTP_MFA_PASSWORD_TO_ENCRYPT_AND_DECRYPT=define_me_please
+
+# The previous password, used ONLY to decrypt existing secrets during rotation.
+# Leave this blank when no rotation is in progress.
+IAM_TOTP_MFA_OLD_PASSWORD_TO_DECRYPT=
+
+# If set to 'true', users will be forced to enroll in MFA.
+IAM_MULTI_FACTOR_MANDATORY=false
+```
+
 ### OpenID Federation
 
 ```bash
