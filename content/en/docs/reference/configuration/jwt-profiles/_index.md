@@ -26,22 +26,21 @@ relying on different profiles.
 IAM currently supports four JWT profiles:
 
 - the `iam` profile
-- the `wlcg` WLCG profile 
+- the `wlcg` profile
 - the `aarc` profile
 - the `kc` profile
-
 
 ## Setting the default profile
 
 The IAM JWT default profile is set using the `IAM_JWT_DEFAULT_PROFILE`
 environment variable, e.g.:
 
-```
+```bash
 IAM_JWT_DEFAULT_PROFILE=iam
 ```
 
 The default profile will be used for all clients that do not explicitly and
-correctly request the use of a profile using scopes. 
+correctly request the use of a profile using scopes.
 
 ## Using scopes to select the JWT profile for a client
 
@@ -49,13 +48,12 @@ To select the profile used by a client, include one of the following scopes
 in the list of scopes authorized for a client:
 
 - `iam`, for the IAM profile
-- `wlcg`, for the WLCG profile 
+- `wlcg`, for the WLCG profile
 - `aarc`, for the AARC profile
 - `kc`, for the Keycloak profile
 
 Clients should only link to one profile. When multiple profiles are linked to a
 client, IAM falls back to the default profile configured for the IAM instance.
-
 
 ## Using system scopes to control profile selection
 
@@ -109,16 +107,15 @@ With this profile:
 - authentication information (name, preferred username and email) is not by default
   included in access tokens; this behaviour can be changed by setting the
   `IAM_ACCESS_TOKEN_INCLUDE_AUTHN_INFO=true` environment variable and by requesting
-  * `email` scope to include the `email` claim in access tokens;
-  * `profile` scope to include the `name` and `preferred_username` claims in access tokens;
+  - `email` scope to include the `email` claim in access tokens;
+  - `profile` scope to include the `name` and `preferred_username` claims in access tokens.
 
 - the `nbf` (not before) claim is not set in access tokens; this behaviour
   can be changed by setting the `IAM_ACCESS_TOKEN_INCLUDE_NBF=true`
-  environment variable. If the `nbf` claim is included, you can configure how long before 
+  environment variable. If the `nbf` claim is included, you can configure how long before
   the token's issue time it becomes valid by setting the environment variable
   `IAM_ACCESS_TOKEN_NBF_OFFSET_SECONDS=60`. By default, this value is
   60 seconds, meaning the token will be valid starting 60 seconds before it is issued.
-
 
 #### Requesting groups with the WLCG profile
 
@@ -135,7 +132,6 @@ explicit request coming from a user.
 
 In order to configure a IAM group as an optional group,
 add the `wlcg.optional-group` label to the group.
-
 
 ### The AARC profile
 
@@ -154,57 +150,63 @@ All the mapping rules are described in the [White Paper for implementation mappi
 Moreover, the unique identifier `voPersonID` claim is available through this profile and follows the rules defined by the [AARC G026][aarc-g026] and the [voPerson v2.0][voPerson-v2.0] schema version.
 
 `voPersonID` is the community unique identifier and it holds a scoped version of the value accountID given by INDIGO IAM.
-This claim is currently present within the following places (given the AARC profile is enabled):
+This claim is currently present within access tokens, ID tokens, userinfo and introspection responses - given the AARC profile is enabled.
 
-- ID Token
-- Access Token
-- Userinfo Response
-- Introspection Response
-
-An example of an Access Token (produced via the Test client) is the following: 
+An example of an Access Token (produced via the Test client) is the following:
 
 ```json
 {
-  "sub": "73f16d93-2441-4a50-88ff-85360d78c6b5",
-  "voperson_id": "73f16d93-2441-4a50-88ff-85360d78c6b5@indigo-dc",
+  "entitlements": [
+    "urn:geant:iam.example:group:Production",
+    "urn:geant:iam.example:group:Analysis",
+    "urn:geant:iam.example:group:Optional"
+  ],
+  "sub": "80e5fb8d-b7c8-451a-89ba-346ae278a66f",
+  "voperson_id": "80e5fb8d-b7c8-451a-89ba-346ae278a66f@indigo-dc",
   "iss": "http://localhost:8080/",
+  "eduperson_scoped_affiliation": "member@indigo-dc",
+  "preferred_username": "test",
   "eduperson_assurance": [
     "https://refeds.org/assurance",
     "https://refeds.org/assurance/IAP/low"
   ],
-  "exp": 1769090046,
-  "iat": 1769086446,
-  "jti": "64e746a2-71f1-4402-acc9-cf4631005590",
-  "client_id": "client"
+  "exp": 1779893835,
+  "iat": 1779890235,
+  "client_id": "client",
+  "jti": "7799c7a1-f348-44f8-bb8c-95dba9ae30ae",
+  "email": "test@iam.test"
 }
 ```
 
-From the example, one can see that the value from the `voperson_id` claim is a scoped version of `sub`.<br>
-The scope is defined by the issuing authority, in this case `indigo-dc` being an identifier of the issuing system. 
+From the example, one can see that the value from the `voperson_id` claim is a scoped version of `sub`.  
+The scope is defined by the issuing authority, in this case `indigo-dc` being an identifier of the issuing system.
 
 #### AARC IdP hint
+
 Lastly, it should be mentioned that `aarc_idp_hint` has been implemented according to the [AARC-G061 guidelines](https://aarc-community.org/guidelines/aarc-g061/).
 
 To make use of the `aarc_idp_hint`, the following must be configured:
 
-- OIDC or SAML 
-- A client enabled with the proper redirect URI. 
+- OIDC or SAML
+- A client enabled with the proper redirect URI.
 
-To make use of the example below, Google has been configured as an OIDC Identity Provider and the test client has been modified to have the redirect URI: *http://localhost:8080/*.<br>
+To make use of the example below, Google has been configured as an OIDC Identity Provider and the test client has been modified to have the redirect URI: `http://localhost:8080/`.  
 The access point is `/authorize`; authentication will be initiated according to the hint.
 
-    http://localhost:8080/authorize?response_type=code&client_id=client&scope=openid&redirect_uri=http://localhost:8080/&aarc_idp_hint=https%3A%2F%2Faccounts.google.com
+```bash
+http://localhost:8080/authorize?response_type=code&client_id=client&scope=openid&redirect_uri=http://localhost:8080/&aarc_idp_hint=https%3A%2F%2Faccounts.google.com
+```
 
 If we dissect the call we have the following:
 
-- `http://localhost:8080/authorize?` is the base of the call and the endpoint to which we can use the `aarc_idp_hint` parameter. 
+- `http://localhost:8080/authorize?` is the base of the call and the endpoint to which we can use the `aarc_idp_hint` parameter.
 - `response_type=code` is specifying that it is the [Authorization Code Flow](https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow) that is desired.
-- `client_id=client` is the client who acts on behalf of the user. Hence, why it needs to have the proper redirect enabled and the correct scopes. 
+- `client_id=client` is the client who acts on behalf of the user. Hence, why it needs to have the proper redirect enabled and the correct scopes.
 - `scope=openid` is the minimum requirement, as it signals an OpenID Connect authentication request.
-- `redirect_uri=http://localhost:8080/` is where the Authorization Server redirects the user after successful authentication.. 
-- `aarc_idp_hint=https%3A%2F%2Faccounts.google.com` is the AARC hint indicating which IdP is preferred for authentication. 
+- `redirect_uri=http://localhost:8080/` is where the Authorization Server redirects the user after successful authentication.
+- `aarc_idp_hint=https%3A%2F%2Faccounts.google.com` is the AARC hint indicating which IdP is preferred for authentication.
 
-Furthermore, the implementation follows specifically the rule set in the guidelines at point 3.3.13.b, that the IAM may disregard any nested hints, and in this implementation it always will.<br>
+Furthermore, the implementation follows specifically the rule set in the guidelines at point 3.3.13.b, that the IAM may disregard any nested hints, and in this implementation it always will.  
 
 From 3.3.13.d it states that if it were to handle the nested hints, then
 
@@ -216,10 +218,10 @@ For this reason, nested hint handling has not implemented.
 This profile is assigned to clients using the `aarc` scope.
 
 [system-scopes]: {{< ref "docs/reference/configuration/system-scopes" >}}
-[wlcg-profile]: https://zenodo.org/record/3460258
-[aarc-g002]: https://aarc-project.eu/guidelines/aarc-g002/
-[aarc-g026]: https://zenodo.org/record/5504407/files/AARC-G026%20-%20Guidelines%20for%20expressing%20community%20user%20identifiers.pdf
-[voPerson-v2.0]: https://github.com/voperson/voperson/blob/draft-2.0.0/voPerson.md#vopersonid-attribute-definition
+[wlcg-profile]: <https://zenodo.org/record/3460258>
+[aarc-g002]: <https://aarc-project.eu/guidelines/aarc-g002/>
+[aarc-g026]: <https://zenodo.org/record/5504407/files/AARC-G026%20-%20Guidelines%20for%20expressing%20community%20user%20identifiers.pdf>
+[voPerson-v2.0]: <https://github.com/voperson/voperson/blob/draft-2.0.0/voPerson.md#vopersonid-attribute-definition>
 
 ### The Keycloak profile
 
@@ -227,8 +229,8 @@ This profile allows the integration with a Keycloak environment.
 
 With this profile:
 
-* the `scope` claim is always included in access tokens;
-* groups are always included in access and ID tokens; they are encoded in the `roles` claim.
+- the `scope` claim is always included in access tokens;
+- groups are always included in access and ID tokens; they are encoded in the `roles` claim.
 
 Having **roles** claim instead of **groups** allows integration with the OIDC client - a conteinerised MISP deployment - which requires them to map IAM users.
 
