@@ -4,8 +4,6 @@ linkTitle: "Rotate TOTP symmetric key"
 weight: 2
 ---
 
-## Rotating the TOTP encryption key
-
 IAM provides a built-in mechanism to rotate the encryption password used to
 protect TOTP secrets.
 
