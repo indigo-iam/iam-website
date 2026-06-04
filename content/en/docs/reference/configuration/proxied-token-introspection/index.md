@@ -5,7 +5,7 @@ weight: 6
 ---
 
 INDIGO IAM implements the Proxied token introspection specification, described in [AARC-G052][proxied-token-introspection].
-Basically, it allows to return an introspection response also for tokens issued by another, trusted
+Basically, it returns an introspection response for tokens issued by another, trusted
 Authorization Server (AS) -- by default IAM can only introspect its own issued tokens.
 
 ## Trust
@@ -13,7 +13,7 @@ Authorization Server (AS) -- by default IAM can only introspect its own issued t
 IAM trusting another Authorization Server means that the IAM operator has registered an OAuth Client
 into the external AS, and that Client is allowed to make requests to the introspection endpoint of the external
 AS via Basic authentication. The Basic authentication requires a `client_id` and `client_secret`, obtained during
-the Client registration into the external AT and saved into IAM configuration.
+the Client registration into the external AS and saved into IAM configuration.
 
 ## Configuration
 
@@ -35,7 +35,7 @@ oidc:
     # External AS URL, appearing as 'iss' claim in the token
     issuer: https://iam-remote.test.example/
     client:
-      # ClientID configured in the trusted AS
+      # Client identifier configured in the trusted AS
       clientId: <client-id>
       # Client secret configured in the trusted AS
       clientSecret: <client-secret>
@@ -46,23 +46,23 @@ oidc:
 ```
 
 To recap, we may encounter here three use-cases:
-- `oidc.providers[].allow-proxied-introspection = true && oidc.providers[].loginButton.visible = false`:
-  allows remote proxied introspection but not login
 - `oidc.providers[].allow-proxied-introspection = false && oidc.providers[].loginButton.visible = true`:
   default behavior, only allows login with external OIDC providers
+- `oidc.providers[].allow-proxied-introspection = true && oidc.providers[].loginButton.visible = false`:
+  allows remote proxied introspection but not login
 - `oidc.providers[].allow-proxied-introspection = true && oidc.providers[].loginButton.visible = true`:
-  allows login with external OIDC providers and supports for Proxied token introspection.
+  allows login with external OIDC providers and supports Proxied token introspection.
 
 ### Cache
 
-The well-known endpoint response of external OIDC providers is cached when doing Proxied token introspection.
+The well-known endpoint response of the external OIDC providers is cached when doing Proxied token introspection.
 
 Here is a snippet on how to configure this specific cache (when the property `oidc.providers[].allow-proxied-introspection` is set to `true`):
 
 ```yaml
 cache:
   # Enable the caching mechanism in IAM.
-  # When set to 'false', no-one kind of cache will be used.
+  # When set to 'false', no cache will be used.
   # The default behavior is an in-memory cache
   enabled: true
   # Refresh period for the external OIDC providers well-known
@@ -84,7 +84,7 @@ $ echo $AT | cut -d . -f2 | base64 -d 2>/dev/null | jq .iss
 "https://iam-remote.test.example/"
 ```
 
-Let's make an introspection response to another IAM instance, e.g. https://iam.test.example/ where the Proxied token introspection is enabled and the instance is configured such to trust https://iam-remote.test.example/.
+Let's make an introspection request to another IAM instance, e.g. https://iam.test.example/ where the Proxied token introspection is enabled and the instance is configured such to trust https://iam-remote.test.example/.
 We should obtain something like:
 
 ```bash
@@ -108,7 +108,7 @@ $ curl https://iam.test.example/introspect -u $CLIENT_ID:$CLIENT_SECRET$ -d toke
 }
 ```
 
-So, if we check the logs of https://iam.test.example/ we will see that the introspection response is forwarded
+So, if we check the logs of https://iam.test.example/ we will see that the introspection request is forwarded
 to https://iam-remote.test.example/:
 
 ```

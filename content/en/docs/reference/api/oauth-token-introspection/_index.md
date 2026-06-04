@@ -8,7 +8,7 @@ at the `/introspect` endpoint.
 
 The `/introspect` endpoint __requires__ client authentication (e.g. Basic authentication).<br>
 In INDIGO IAM, the introspection response includes all the fields listed in the specification, also
-the OPTIONAL once.
+the OPTIONAL ones.
 
 A typical call to the introspection endpoint is the following:
 
@@ -36,7 +36,7 @@ $ curl -u $CLIENT_ID:$CLIENT_SECRET https://iam.test.example/introspect -d token
 
 ## Proxied token introspection
 
-INDIGO IAM also supports for the Proxied token introspection at the `/introspection` endpoint,
+INDIGO IAM also supports Proxied token introspection at the `/introspection` endpoint,
 as described in [AARC-G052][proxied-token-introspection].
 
 In order to enable the Proxied token introspection one has to configure IAM as per
