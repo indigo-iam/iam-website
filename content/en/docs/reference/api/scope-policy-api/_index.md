@@ -189,7 +189,7 @@ scope:
       prefix: storage.modify
       path: /
       # Allows staging operations (i.e. stage requests, archiveinfo,
-      # cancel, release), but do not permit reading the staged data
+      # cancel, release), but does not permit reading the staged data
     - name: storage.stage
       type: path
       prefix: storage.stage
@@ -199,6 +199,7 @@ scope:
       type: path
       prefix: storage.poll
       path: /
+      # Returns user's groups with a 'wlcg.groups:' prefix
     - name: wlcg.groups
       type: regexp
       regexp: ^wlcg\.groups(?::((?:\/[a-zA-Z0-9][a-zA-Z0-9_.-]*)+))?$
