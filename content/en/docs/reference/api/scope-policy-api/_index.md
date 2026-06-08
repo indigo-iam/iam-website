@@ -162,25 +162,44 @@ IAM currently supports three scope matching algorithms:
   configuration or by the scope policies.
 
 `REGEXP` and `PATH` matching algorithms are configured by adding a
-`scope.matchers` section to the IAM configuration, as shown in the following
-fragment which defines the scope matching algorithm for [WLCG profile
-scopes][wlcg-profile]:
+`scope.matchers` section to the IAM configuration.
+The  `wlcg-scopes` Spring profile (documented [here](/docs/reference/configuration/#spring-profiles))
+may be enabled in INDIGO IAM
+in order to support the scope matching algorithm for the [WLCG JWT profile][wlcg-profile];
+it basically consists in the following YAML snippet:
 
 ```yaml
 scope:
   matchers:
+      # Allows reading data from disk
     - name: storage.read
       type: path
       prefix: storage.read
       path: /
+      # Allows to upload data, create directory and subdirectories,
+      # but does not permit overwrite operations
     - name: storage.create
       type: path
       prefix: storage.create
       path: /
+      # Extension of 'storage.create', it allows renaming files
+      # and overwrite operations
     - name: storage.modify
       type: path
       prefix: storage.modify
       path: /
+      # Allows staging operations (i.e. stage requests, archiveinfo,
+      # cancel, release), but does not permit reading the staged data
+    - name: storage.stage
+      type: path
+      prefix: storage.stage
+      path: /
+      # Allows to check the file locality (i.e. disk and/or tape)
+    - name: storage.poll
+      type: path
+      prefix: storage.poll
+      path: /
+      # Returns user's groups with a 'wlcg.groups:' prefix
     - name: wlcg.groups
       type: regexp
       regexp: ^wlcg\.groups(?::((?:\/[a-zA-Z0-9][a-zA-Z0-9_.-]*)+))?$
