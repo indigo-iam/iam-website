@@ -512,7 +512,18 @@ where `labels.json` is:
 }
 ```
 
-Only `name` is required and must not be blank.
+Only the `name` is __required__ and must
+
+* start with a letter
+* contain only letters, digits, `.`, `_` or `-`
+
+The `prefix`, instead, must
+
+* consist of one or more labels separated by dots; each label must
+  * start and end with a letter or digit
+  * contain only letters, digits or `-`
+  * be between 1 and 63 characters long
+* end with a dot followed by 2 to 6 letters (e.g. `.org`, `.it`, etc.)
 
 ### DELETE `/iam/account/{id}/labels`
 
