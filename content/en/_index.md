@@ -1,8 +1,7 @@
-+++
-title = "INDIGO IAM"
-linkTitle = "INDIGO IAM"
-
-+++
+---
+title: "INDIGO IAM"
+linkTitle: "INDIGO IAM"
+---
 
 {{< blocks/cover image_anchor="top" height="full" color="orange">}}
 <div class="mx-auto">
