@@ -247,6 +247,9 @@ IAM_SAML_ENTITY_ID=urn:iam:iam-devel
 # Text shown in the SAML login button on the IAM login page
 IAM_SAML_LOGIN_BUTTON_TEXT=Sign in with SAML
 
+# Whether the WAYF discovery button is shown on the IAM login page
+IAM_SAML_WAYF_LOGIN_BUTTON_VISIBLE=true
+
 ## SAML keystore settings
 
 # The keystore holding certificates and keys used for SAML crypto
