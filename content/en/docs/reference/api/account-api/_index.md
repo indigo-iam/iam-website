@@ -5,6 +5,7 @@ title: IAM account API
 IAM provides a RESTful API that can be used to manage users, group membership, clients, etc.
 
 IAM implements the following endpoints:
+
 * ```/iam/account/{id}/attributes```, providing access to user attributes
 * ```/iam/account/{id}/authorities```, providing access to user authorities/roles
 * ```/iam/account/me/clients```, providing access to clients owned by the user
@@ -213,7 +214,9 @@ Requires `iam:admin.read` scope.
 |   byauthority   |   authority   | String |
 
 Examples of the available options:
+
 * byusername
+
     ```bash
     $ curl -s -H "Authorization: Bearer ${AT}" \
       http://localhost:8080/iam/account/find/byusername?username=test | jq
@@ -238,41 +241,47 @@ Examples of the available options:
     ```
 
 * bylabel
+
     ```bash
     $ curl -s -H "Authorization: Bearer ${AT}" \
       http://localhost:8080/iam/account/find/bylabel?name=test
     ```
 
 * byemail
+
     ```bash
     $ curl -s -H "Authorization: Bearer ${AT}" \
       http://localhost:8080/iam/account/find/byemail?email=test.user@gmail.com
     ```
 
 * bycertsubject
+
     ```bash
     $ curl -s -H "Authorization: Bearer $AT" \
       http://localhost:8080/iam/account/find/bycertsubject?certificateSubject=CN%3dTest%20User%20test%40infn.it%2cO%3dIstituto%20Nazionale%20di%20Fisica%20Nucleare%2cC%3dIT%2cDC%3dtcs%2cDC%3dterena%2cDC=org
     ```
 
 * byauthority (possible authorities are: `admin`, `user`, `gm:<uuid>`, `reader`, `pre_authenticated`)
+
     ```bash
     $ curl -s -H "Authorization: Bearer $AT" \
       http://localhost:8080/iam/account/find/byauthority?authority=admin
     ```
 
 * bygroup/{groupId}
+
     ```bash
     $ curl -s -H "Authorization: Bearer ${AT}" \
       http://localhost:8080/iam/account/find/bygroup/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1
     ```
 
 * notingroup/{groupId}
+
     ```bash
     $ curl -H "Authorization: Bearer ${AT}" \
       http://localhost:8080/iam/account/find/notingroup/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1
     ```
-    
+
 ## Group
 
 ### GET `/iam/account/me/groups`
@@ -364,7 +373,6 @@ $ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
   -H "Authorization: Bearer ${AT}" \
   http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/groups/c617d586-54e6-411d-8e38-649677980004
 ```
-
 
 ### DELETE `/iam/account/{id}/groups/{groupId}`
 
@@ -476,7 +484,8 @@ $ curl -s -H "Authorization: Bearer ${AT}" \
 [
   {
     "prefix": "hr.cern",
-    "name": "ignore"
+    "name": "status",
+    "value": "VO_MEMBER"
   }
 ]
 ```
@@ -498,9 +507,23 @@ where `labels.json` is:
 ```json
 {
   "prefix": "hr.cern",
-  "name": "ignore"
+  "name": "status",
+  "value": "VO_MEMBER"
 }
 ```
+
+Only the `name` is __required__ and must
+
+* start with a letter
+* contain only letters, digits, `.`, `_` or `-`
+
+The `prefix`, instead, must
+
+* consist of one or more labels separated by dots; each label must
+  * start and end with a letter or digit
+  * contain only letters, digits or `-`
+  * be between 1 and 63 characters long
+* end with a dot followed by 2 to 6 letters (e.g. `.org`, `.it`, etc.)
 
 ### DELETE `/iam/account/{id}/labels`
 
@@ -511,7 +534,7 @@ Requires `iam:admin.write` scope.
 ```bash
 $ curl -X DELETE -H "Authorization: Bearer ${AT}" \
   http://localhost:8080/iam/account/80e5fb8d-b7c8-451a-89ba-346ae278a66f/labels \
-  -d name=ignore -d prefix="hr.cern"
+  -d name=status -d prefix="hr.cern"
 ```
 
 ## User account expiration time
@@ -571,28 +594,28 @@ Requires `iam:admin.read` scope.
 
 Possible search parameters are:
 
-- name
-- username
-- email
-- Id
-- subjectDn from a possible X.509 certificate
+* name
+* username
+* email
+* Id
+* subjectDn from a possible X.509 certificate
 
 Given that no query parameters have been added, then the first 10 users will be returned. 
-Pagination is not session-based, so one can never assume repeatable results. The pagination follows the one described in [Scim-api][Scim-pagination] with the addition of sorting the results in an ascending or descending order using the email addresses, the creation time or the name as a way of sorting. 
+Pagination is not session-based, so one can never assume repeatable results. The pagination follows the one described in [Scim-api][Scim-pagination] with the addition of sorting the results in an ascending or descending order using the email addresses, the creation time or the name as a way of sorting.
 
-The following query parameters are available: 
+The following query parameters are available:
 
-| Parameter | Description | Default value |
-| -------- | -------- | -------- |
-|   startIndex   |   The 1-based index of the first search result.    | 1     |
-|   count   |   Non-negative Integer. Specifies the desired maximum number of search results per page.   | 10     |
-|   filter   |   String used to search for account attribute values. Attributes are: email, subjectDn of a X.509 certificate, username, Id, and name.   | None.     |
-|   sortBy   |   Determines what attribute to sort the results by. Attributes are: creation, email and name.   | name     |
-|   sortDirection   |   Determines the ordering strategy. Options are: asc and desc   | asc |
+| Parameter         | Description                                                                                                                              | Default value |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+|   startIndex      |   The 1-based index of the first search result.                                                                                          | 1             |
+|   count           |   Non-negative Integer. Specifies the desired maximum number of search results per page.                                                 | 10            |
+|   filter          |   String used to search for account attribute values. Attributes are: email, subjectDn of a X.509 certificate, username, Id, and name.   | None.         |
+|   sortBy          |   Determines what attribute to sort the results by. Attributes are: creation, email and name.                                            | name          |
+|   sortDirection   |   Determines the ordering strategy. Options are: asc and desc                                                                            | asc           |
 
 <br />
 
-The example below returns the first 10 users. 
+The example below returns the first 10 users.
 
 ```bash
 $ curl -s -H "Authorization: Bearer ${AT}" \
@@ -743,6 +766,7 @@ The following example returns the users who have one of the aforementioned filte
 ```
 
 [Scim-pagination]: https://indigo-iam.github.io/v/v1.12.0/docs/reference/api/scim-api/#pagination
+
 ### GET `/iam/group/search`
 
 Shows the list of IAM groups.
