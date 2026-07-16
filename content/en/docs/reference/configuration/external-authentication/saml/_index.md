@@ -226,6 +226,42 @@ practice to declare as mandatory one of the attribute listed in
 You can customize the SAML login button text shown in the IAM login page with
 the `IAM_SAML_LOGIN_BUTTON_TEXT` environment variable.
 
+## Configuring direct SAML login shortcuts
+
+By default, the SAML login button opens the Where Are You From (WAYF) page so
+that users can select an IdP. When one or more IdPs are commonly used, direct
+login shortcuts can be added to the IAM login page:
+
+```yaml
+saml:
+  login-shortcuts:
+    - name: example-idp
+      entity-id: https://idp.example.org/idp/shibboleth
+      enabled: true
+      login-button:
+        text: Sign in with Example IdP
+```
+
+Each shortcut starts SAML authentication directly with its configured IdP and
+bypasses the WAYF page. The `entity-id` value must exactly match an IdP in the
+configured SAML metadata.
+
+The WAYF button and direct shortcuts can be displayed together. To display only
+the direct shortcuts, hide the WAYF button:
+
+```yaml
+saml:
+  wayf-login-button:
+    visible: false
+```
+
+For deployments configured exclusively through environment variables, the
+same structured configuration can be supplied with `SPRING_APPLICATION_JSON`:
+
+```env
+SPRING_APPLICATION_JSON='{"saml":{"wayf-login-button":{"visible":false},"login-shortcuts":[{"name":"example-idp","entity-id":"https://idp.example.org/idp/shibboleth","enabled":true,"login-button":{"text":"Sign in with Example IdP"}}]}}'
+```
+
 ## Minimal SAML configuration example
 
 ```env
@@ -326,4 +362,3 @@ instructions on how to override the default IAM configuration.
 See [registration configuration][external-idp-config].
 
 [external-idp-config]: {{< ref "/docs/reference/configuration/registration/#registration-with-external-idp" >}}
-
