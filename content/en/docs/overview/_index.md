@@ -12,8 +12,8 @@ policies on distributed resources can be managed in an homogeneous way,
 supporting identity federations and other authentication mechanisms (X.509
 certificates and social logins).
 
-IAM implements the Virtual Organization (VO) concept, and is the developed by
-the same team behind [VOMS][voms].
+IAM implements the Virtual Organization (VO) concept and was originally developed
+by the same team behind [VOMS][voms].
 
 IAM is the AAI solution chosen to power the next generation [WLCG][wlcg]
 Authentication and Authorization infrastructure.
