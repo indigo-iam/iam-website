@@ -27,6 +27,10 @@ pygmentsUseClassic = false
 # See https://help.farbox.com/pygments.html
 pygmentsStyle = "tango"
 
+# Security
+[security]
+allowContent = ['^text/html$', '^text/markdown$']
+
 # Configure how URLs look like per section.
 [permalinks]
 blog = "/:section/:year/:month/:day/:slug/"
@@ -53,6 +57,7 @@ anchor = "Smart"
 
 [languages]
 [languages.en]
+label = "English"
 title = "INDIGO IAM"
 params.description = "The INDIGO Identity and Access Management (IAM) Service"
 languageName ="English"
