@@ -79,7 +79,7 @@ This allows the same IAM-managed identity and membership information to be consu
 
 IAM exposes a rich set of REST APIs for managing and retrieving information about users, groups, memberships, clients, tokens and authorization policies.
 
-It also provides a **[SCIM](scim) interface** that can be used to provision IAM identity and membership information to external services. This enables, for example, the creation or synchronization of local accounts based on centrally managed IAM information.
+It also provides a **[SCIM][scim] interface** that can be used to provision IAM identity and membership information to external services. This enables, for example, the creation or synchronization of local accounts based on centrally managed IAM information.
 
 ## Integrations
 
