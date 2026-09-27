@@ -7,10 +7,6 @@ weight: 5
 IAM can be deployed from packages on the RHEL 8 and 9 platforms.
 The RPMs are hosted on the [INDIGO IAM package stable repository](https://repo.cloud.cnaf.infn.it/service/rest/repository/browse/indigo-iam-rpm-stable/).
 
-{{% alert title="Warning" color="warning" %}}
-We no longer maintain packages for the CENTOS 7 and Ubuntu platform.
-{{% /alert %}}
-
 ## Installation
 
 Since INDIGO IAM v1.14.0 we release signed RPMs.
@@ -18,7 +14,7 @@ Since INDIGO IAM v1.14.0 we release signed RPMs.
 1. Install the INDIGO IAM release key:
 
   ```shell
-  sudo rpm --import https://indigo-iam.github.io/repo/gpgkeys/indigo-iam-release.pub.gpg
+  sudo rpm --import https://repo.cloud.cnaf.infn.it/repository/indigo-iam/CNAFSD.asc
   ```
 
 ### On AlmaLinux 8
@@ -28,7 +24,7 @@ Since INDIGO IAM v1.14.0 we release signed RPMs.
   ```shell
   sudo curl -L \
     -o /etc/yum.repos.d/indigoiam-stable-el8.repo \
-    https://indigo-iam.github.io/repo/repofiles/rhel/indigoiam-stable-el8.repo
+    https://repo.cloud.cnaf.infn.it/repository/indigo-iam-rpm-stable/almalinux9/repofiles/indigoiam-stable-el8.repo
   ```
 
 3. Clear the package manager cache and install `iam-login-service` with:
@@ -46,7 +42,7 @@ Since INDIGO IAM v1.14.0 we release signed RPMs.
   ```shell
   sudo curl -L \
     -o /etc/yum.repos.d/indigoiam-stable-el9.repo \
-    https://indigo-iam.github.io/repo/repofiles/rhel/indigoiam-stable-el9.repo
+    https://repo.cloud.cnaf.infn.it/repository/indigo-iam-rpm-stable/almalinux9/repofiles/indigoiam-stable-el9.repo
   ```
 
 3. Clear the package manager cache and install `iam-login-service` with:
@@ -68,6 +64,7 @@ The file is located in the following path:
 ```
 /etc/sysconfig/iam-login-service
 ```
+
 ## Run the service
 
 The IAM login service is managed by `systemd`.
@@ -91,6 +88,7 @@ sudo journalctl -fu iam-login-service
 ```
 
 ### Deployment Tips
+
 In headless servers, running `haveged` daemon is recommended to generate more entropy.
 Before running the IAM login service, check the available entropy with:
 
