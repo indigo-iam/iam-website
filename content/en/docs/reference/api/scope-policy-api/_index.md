@@ -163,7 +163,7 @@ IAM currently supports three scope matching algorithms:
 
 `REGEXP` and `PATH` matching algorithms are configured by adding a
 `scope.matchers` section to the IAM configuration.
-The  `wlcg-scopes` Spring profile (documented [here](/docs/reference/configuration/#spring-profiles))
+The  `wlcg-scopes` Spring profile (documented [here]({{< relref "/docs/reference/configuration" >}}#spring-profiles))
 may be enabled in INDIGO IAM
 in order to support the scope matching algorithm for the [WLCG JWT profile][wlcg-profile];
 it basically consists in the following YAML snippet:
