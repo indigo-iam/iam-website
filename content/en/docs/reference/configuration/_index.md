@@ -483,6 +483,42 @@ IAM_OIDFED_FEDERATION_ENTITY_CONTACTS=
 # URI of a logo representing the entity. Not mandatory
 IAM_OIDFED_FEDERATION_ENTITY_LOGO_URI=
 ```
+### Local cache configuration
+
+One can configure the IAM to use an in memory Caffiene cache for optimization. 
+Said cache can be enabled under the caching segment provided one has turned of the redis cache.
+The local cache can improve performance for grant types:
+- Client credentials
+- Token Exchange
+- Refresh token
+
+However, the cache can benefit from being short lived, when keeping security concerns in mind.
+Moreover, cache eviction is in place upon updates and deletion, but should one be running multiple instances, 
+then one relies on the expiration time of the cache (default value of 60 seconds).
+```bash
+cache:
+  # Enable the caching mechanism in IAM.
+  # When set to 'false', no-one kind of cache will be used.
+  # The default behavior is an in-memory cache
+  enabled: true
+  # Refresh period for the external OIDC providers well-known
+  # endpoint cache (in seconds). Used during Proxied token introspection
+  # (disabled by default)
+  oidc-discovery-cleanup-period-secs: 86400
+  # Refresh period of the contents of the well-known 
+  # endpoint cache (in seconds) 
+  well-known-cleanup-period-secs: 300
+  # Default life-time of cache (in seconds)
+  default-cleanup-period-secs: 60
+  # Default size of cache pr. type in cache (in units)
+  default-cache-size: 1000
+  # Allow to cache the information into a Redis service
+  redis:
+    enabled: false
+
+```
+
+
 
 ### Redis configuration
 

@@ -68,10 +68,39 @@ cache:
   # Refresh period for the external OIDC providers well-known
   # endpoint cache (in seconds)
   oidc-discovery-cleanup-period-secs: 86400
+  # Refresh period of the contents of the well-known 
+  # endpoint cache (in seconds) 
+  well-known-cleanup-period-secs: 300
+  # Default life-time of cache (in seconds)
+  default-cleanup-period-secs: 60
+  # Default size of cache pr. type in cache (in units)
+  default-cache-size: 1000
   # Allow to cache the information into a Redis service
   redis:
     enabled: false
 ```
+For the in memory Caffeine cache, if enabled, the following items are cached: 
+- Well-known contents
+- Scope matchers for clients
+- OIDC discovery document pr. issuer
+- System Scopes
+- Clients
+- Refresh Tokens
+- Access Tokens
+
+The caching of the system scopes, clients, and refresh tokens primarily serves the purpose of minimizing database look-ups
+during the client credentials, token-exchange and refresh token grant types. The `default-cleanup-period-secs` is applied to said values in the cache.
+
+For the `default-cache-size` it applies to: 
+- Scope matchers for clients
+- OIDC discovery document pr. issuer
+- Clients
+- Refresh Tokens
+- Access Tokens
+
+The well-known contents along with the system scopes have an implicit size of 1. 
+
+The caching of system scopes, clients and refresh tokens has only been applied for a local Caffeine cache, not for redis. 
 
 ## Test
 
