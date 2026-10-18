@@ -1,9 +1,9 @@
-+++
-title = "INDIGO IAM"
-linkTitle = "INDIGO IAM"
-+++
+---
+title: "INDIGO IAM"
+linkTitle: "INDIGO IAM"
+---
 
-{{< blocks/cover image_anchor="top" height="full" color="orange">}}
+{{< blocks/cover image_anchor="top" height="full">}}
 <div class="mx-auto">
 	<h1 class="display-3 font-weight-bold text-white">Welcome to the INDIGO IAM service website!</h1>
 	<p class="lead text-white pt-5 mt-5">The open source, self-contained Identity And Access Management (IAM) solution for Scientific computing!</p>
