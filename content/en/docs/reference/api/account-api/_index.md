@@ -775,4 +775,35 @@ $ curl -s -H "Authorization: Bearer ${AT}" \
     ...
 ```
 
+Filtering is performed via the `filter` query parameter, which accepts
+either a group UUID or name, e.g.:
+
+```bash
+$ curl -s -H "Authorization: Bearer ${AT}" \
+  http://localhost:8080/iam/group/search?filter=Analysis \
+  # or http://localhost:8080/iam/group/search?filter=6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1
+{
+  "totalResults": 1,
+  "itemsPerPage": 1,
+  "startIndex": 1,
+  "Resources": [
+    {
+      "id": "6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1",
+      "meta": {
+        "created": "2022-09-21T17:20:15.478+02:00",
+        "lastModified": "2022-09-21T17:20:15.478+02:00",
+        "location": "http://localhost:8080/scim/Groups/6a384bcd-d4b3-4b7f-a2fe-7d897ada0dd1",
+        "resourceType": "Group"
+      },
+      "displayName": "Analysis",
+      "urn:indigo-dc:scim:schemas:IndigoGroup": {
+        "parentGroup": null,
+        "description": "The analysis group",
+        "labels": null
+      }
+    }
+  ]
+}
+```
+
 [group membership section]: {{< ref "/docs/tasks/administration/group-management/#managing-membership-for-a-group" >}}
